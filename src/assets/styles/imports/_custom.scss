@@ -5,10 +5,12 @@
   }
 }
 
-.form-control{
-  border-radius: 3px;
-
+.submited .form-control.ng-invalid{
+  box-shadow: 0 0 5px 0.2px #F44336;
+  border: none;
 }
+
+
 .form-control.ng-invalid.ng-dirty:focus {
   box-shadow: 0 0 5px 0.2px #F44336;
   border: none;
@@ -16,11 +18,24 @@
 }
 
 .form-control.ng-invalid.ng-touched {
-  box-shadow: 0 0 5px 0.2px #F44336;
+  box-shadow: 0 0 5px 1.2px #F44336;
+  //border: none;
+}
+
+.form-control.ng-invalid.ng-touched:focus {
+  box-shadow: 0 0 5px 1.2px #1ab37a;
   border: none;
 }
+
+.form-control:focus, .single-line:focus{
+  box-shadow: 0 0 5px 1.2px #1ab37a;
+  border: none;
+}
+
 .help-block {
  color: #fd928b;
+ display: inline-block;
+ margin:0;
 }
 
 td>i{
@@ -71,11 +86,6 @@ td.mat-cell.cdk-column-actions.mat-column-actions{
   text-align: center;
 }
 
-.mat-elevation-z8 .extra-form{
-  background-color: #e6e6e6;
-  padding-bottom: 2em;
-}
-
 .mat-column-select {
   width: 5em;
 }
@@ -106,3 +116,37 @@ input[type="file"] {
 .mat-row:nth-child(odd){
   //background-color:#b1cfc9;
   }
+
+  .mat-tab-body-wrapper {
+    border: 1px solid #eee;
+    border-top: 0;
+    padding: 1em;
+}
+
+
+.skin-2 .nav > li.active {
+  border: none;
+  border-left: 0.3em Solid #19c0a0;
+  background: #f6f6f6;
+}
+
+.skin-2 #side-menu > li > a {
+  font-weight: 400;
+}
+.skin-2 #side-menu > li.active > a {
+  font-weight: 600;
+}
+
+.skin-2 .navbar-default .nav > li > a:hover, .skin-2 .navbar-default .nav > li > a:focus ,.skin-2 #side-menu > li > a:hover {
+  background: #f6f6f6;
+  font-weight: 600;
+}
+
+.page-heading {
+  border-top: 0;
+  padding: 0 10px 10px 10px;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: #11c2a1;
+}

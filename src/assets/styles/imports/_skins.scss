@@ -149,7 +149,7 @@ body.skin-1 {
 
 // Main colors
 $skin-2-color: #11c2a1;
-$skin-2-nav-bg: #f6f6f6;
+$skin-2-nav-bg: #fff;
 $skin-2-nav-top-bg: #11c2a1;
 
 // Custom style
@@ -197,7 +197,7 @@ body.skin-2 {
 
 .skin-2 .page-heading {
   border: none;
-  background: rgba(255, 255, 255, 0.7);
+  background: $skin-2-nav-bg;
 }
 
 .skin-2 ul.nav-second-level {
@@ -291,12 +291,12 @@ body.skin-2 #wrapper {
 }
 
 .skin-2 #page-wrapper {
-  background: rgba(246, 246, 246, 1);
-  background: -webkit-radial-gradient(center, ellipse cover, rgba(246, 246, 246, 1) 20%, rgba(213, 213, 213, 1) 100%);
-  background: -o-radial-gradient(center, ellipse cover, rgba(246, 246, 246, 1) 20%, rgba(213, 213, 213, 1) 100%);
-  background: -ms-radial-gradient(center, ellipse cover, rgba(246, 246, 246, 1) 20%, rgba(213, 213, 213, 1) 100%);
-  background: radial-gradient(ellipse at center, rgba(246, 246, 246, 1) 20%, rgba(213, 213, 213, 1) 100%);
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#f6f6f6, endColorstr=#d5d5d5)";
+  background: #f6f6f6;
+  background: -webkit-radial-gradient(center, ellipse cover, #f6f6f6 20%,#f6f6f6) ;
+  background: -o-radial-gradient(center, ellipse cover, #f6f6f6 20%,#f6f6f6) ;
+  background: -ms-radial-gradient(center, ellipse cover, #f6f6f6 20%,#f6f6f6) ;
+  background: radial-gradient(ellipse at center, #f6f6f6 20%,#f6f6f6) ;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#f6f6f6, endColorstr=#f6f6f6 )";
 }
 
 .skin-2 .ibox-title, .skin-2 .ibox-content {

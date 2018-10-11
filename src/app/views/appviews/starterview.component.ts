@@ -230,7 +230,7 @@ export class StarterViewComponent implements OnInit {
     this.cityForm.ST_CNT_ID = city.ST_CNT_ID;
     this.cityForm.Refernce_No = city.Refernce_No;
     this.cityForm.Loc_Status = city.Loc_Status;
-    this.cityForm.selected = city.selected;
+    this.cityForm.selected = true;
   }
 
 
@@ -286,9 +286,27 @@ export class StarterViewComponent implements OnInit {
 
   ExportToPdf(objects: Object[]) {
     this.coreService.ExportToPdf(objects, 'cities', 'country').subscribe(data => {
-     console.log(data);
+      console.log(data);
     });
   }
 
-}
 
+
+  getCityName(id: number) {
+    for (let index = 0; index < this.cities.length; index++) {
+      if (this.cities[index].Id === id) {
+        return this.cities[index].Name;
+      }
+    }
+  }
+
+
+  getCountryName(id: number) {
+    for (let index = 0; index < this.countries.length; index++) {
+      if (this.countries[index].Id === id) {
+        return this.countries[index].Name;
+      }
+    }
+  }
+
+}
