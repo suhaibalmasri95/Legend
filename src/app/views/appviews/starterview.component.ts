@@ -234,14 +234,6 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  loadCities() {
-    this.coreService.loadCities(this.areaForm.ST_CNT_ID ? this.areaForm.ST_CNT_ID : null, null, 1).subscribe(data => {
-      this.cities = data;
-      this.areaForm.ST_CTY_ID = null;
-    });
-  }
-
-
   updateCity(city: City) {
     this.cityForm = new City;
 
