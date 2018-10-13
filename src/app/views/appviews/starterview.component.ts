@@ -23,6 +23,12 @@ export class StarterViewComponent implements OnInit {
   countryForm: Country;
   countries: Country[];
   cityForm: City;
+  submit: false;
+  submit2: false;
+  submit3: false;
+
+
+
   cities: City[];
   areaForm: Area;
   areas: Area[];
