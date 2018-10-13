@@ -2,7 +2,7 @@ import { City } from './../../models/City';
 import { Currency } from './../../models/Currency';
 import { LockUp } from './../../models/LockUp';
 import { CoreService } from './../../_services/CoreServices.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { Country } from '../../models/country';
@@ -17,47 +17,43 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: 'starter.template.html'
 })
 
-export class StarterViewComponent implements OnInit {
+export class StarterViewComponent implements OnInit, AfterViewInit {
   url: string = environment.azureUrl + 'core';
 
   countryForm: Country;
   countries: Country[];
   cityForm: City;
-  submit: false;
-  submit2: false;
-  submit3: false;
-
-
-
   cities: City[];
   areaForm: Area;
   areas: Area[];
   LockUps: LockUp[];
   currencies: Currency[];
+  submit: boolean;
+  submit2: boolean;
+  submit3: boolean;
+  countryTableColumns = ['select', 'Id', 'Name', 'Name2', 'Nationality', 'Currency code', 'Phone code', 'Flag', 'actions'];
+  countriesDataSource: MatTableDataSource<Country>;
 
-  countryTableColumns: string[] = ['select', 'ID', 'Name', 'Name2', 'Nationality', 'Currency code', 'Phone code', 'actions'];
-  countriesDataSource = new MatTableDataSource();
+  cityTableColumns = ['select', 'Id', 'Name', 'Name2', 'ST_CNT_ID', 'actions'];
+  citiesDataSource: MatTableDataSource<City>;
 
-  cityTableColumns: string[] = ['select', 'ID', 'Name', 'Name2', 'Country', 'actions'];
-  citiesDataSource = new MatTableDataSource<City>();
-
-  areaTableColumns: string[] = ['select', 'ID', 'Name', 'Name2', 'Country', 'City', 'actions'];
-  areasDataSource = new MatTableDataSource<Area>();
+  areaTableColumns = ['select', 'Id', 'Name', 'Name2', 'ST_CNT_ID', 'ST_CTY_ID', 'actions'];
+  areasDataSource: MatTableDataSource<Area>;
 
 
   urlLoad: string;
   uploader: FileUploader;
   filePath: string;
-  dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<object> = new Subject();
   extraForm: string;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  // @ViewChild(MatPaginator) paginator2: MatPaginator;
-  // @ViewChild(MatPaginator) paginator3: MatPaginator;
+
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginator2') paginator2: MatPaginator;
+  @ViewChild('paginator3') paginator3: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatSort) sort2: MatSort;
-  @ViewChild(MatSort) sort3: MatSort;
+  @ViewChild('table2', { read: MatSort }) sort2: MatSort;
+  @ViewChild('table3', { read: MatSort }) sort3: MatSort;
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private coreService: CoreService) { }
 
@@ -66,27 +62,16 @@ export class StarterViewComponent implements OnInit {
     this.countryForm = new Country();
     this.cityForm = new City();
     this.areaForm = new Area();
-
+    this.submit = false;
+    this.submit2 = false;
+    this.submit3 = false;
     this.route.data.subscribe(data => {
       this.countries = data.country;
       this.LockUps = data.lockUp;
       this.currencies = data.currencies;
-
-      this.countriesDataSource = new MatTableDataSource<Country>(this.countries);
-      this.citiesDataSource = new MatTableDataSource<City>(this.cities);
-      this.areasDataSource = new MatTableDataSource<Area>(this.areas);
-
-      this.countriesDataSource.paginator = this.paginator;
-      // this.citiesDataSource.paginator = this.paginator2;
-      // this.areasDataSource.paginator = this.paginator3;
-
-      this.countriesDataSource.sort = this.sort;
-      this.citiesDataSource.sort = this.sort2;
-      this.areasDataSource.sort = this.sort3;
+      this.countriesDataSource = new MatTableDataSource(data.country);
 
     });
-
-
 
 
 
@@ -101,41 +86,57 @@ export class StarterViewComponent implements OnInit {
 
   }
 
+  ngAfterViewInit(): void {
+    this.countriesDataSource.paginator = this.paginator;
+    this.countriesDataSource.sort = this.sort;
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.countriesDataSource.sort = this.sort;
+    this.citiesDataSource.sort = this.sort2;
+    this.areasDataSource.sort = this.sort3;
+    this.countriesDataSource.paginator = this.paginator;
+    this.citiesDataSource.paginator = this.paginator2;
+    this.areasDataSource.paginator = this.paginator3;
+  }
+
 
   showCityAreaForm($event) {
+    setTimeout(() => {
+      switch ($event.index) {
+        case 0:
+          this.extraForm = '';
+          this.countriesDataSource.paginator = !this.countriesDataSource.paginator ? this.paginator : null;
+          break;
+        case 1:
+          this.extraForm = 'city';
+          //   this.citiesDataSource.paginator = !this.citiesDataSource.paginator ? this.paginator2 : null;
+          this.coreService.loadCities(this.countryForm.Id ? this.countryForm.Id : null, null, 1).subscribe(data => {
+            this.cities = data;
+            this.citiesDataSource = new MatTableDataSource<City>(data);
+            this.citiesDataSource.paginator = this.paginator2;
+            this.citiesDataSource.sort = this.sort2;
+            this.cityForm.ST_CNT_ID = this.countryForm.Id;
+          });
+          break;
+        case 2:
+          this.extraForm = 'area';
+          //      this.areasDataSource.paginator = !this.areasDataSource.paginator ? this.paginator3 : null;
+          // tslint:disable-next-line:max-line-length
+          this.coreService.loadAreas(null, this.cityForm.Id ? this.cityForm.Id : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null, 1).subscribe(data => {
+            this.areas = data;
+            this.areasDataSource = new MatTableDataSource<Area>(data);
+            this.areasDataSource.paginator = this.paginator3;
+            this.areasDataSource.sort = this.sort3;
+            this.areaForm.ST_CTY_ID = this.cityForm.Id;
+            this.areaForm.ST_CNT_ID = this.cityForm.ST_CNT_ID;
 
-    this.extraForm = $event.index === 1 ? 'city' : ($event.index === 2 ? 'area' : '');
-
-    if (this.extraForm === 'city') {
-      this.coreService.loadCities(this.countryForm.Id ? this.countryForm.Id : null, null, 1).subscribe(data => {
-        this.cities = data;
-        this.citiesDataSource = new MatTableDataSource<City>(this.cities);
-        this.cityForm.ST_CNT_ID = this.countryForm.Id;
-      });
-    } else if (this.extraForm === 'area') {
-      // tslint:disable-next-line:max-line-length
-      this.coreService.loadAreas(null, this.cityForm.Id ? this.cityForm.Id : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null, 1).subscribe(data => {
-        this.areas = data;
-        this.areasDataSource = new MatTableDataSource<Area>(this.areas);
-        this.areaForm.ST_CTY_ID = this.cityForm.Id;
-        this.areaForm.ST_CNT_ID = this.cityForm.ST_CNT_ID;
-
-      });
-
-    }
-
-  }
-
-  filterCountries(filterValue: string) {
-    this.countriesDataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  filtercities(filterValue: string) {
-    this.citiesDataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  filterAreas(filterValue: string) {
-    this.areasDataSource.filter = filterValue.trim().toLowerCase();
+          });
+          break;
+      }
+    });
   }
 
 
@@ -217,8 +218,8 @@ export class StarterViewComponent implements OnInit {
         this.cities = data;
         this.citiesDataSource = new MatTableDataSource<City>(this.cities);
         this.cityForm = new City;
-        form.resetForm();
         this.submit2 = false;
+        form.resetForm();
       });
     });
 

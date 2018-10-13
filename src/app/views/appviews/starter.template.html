@@ -98,14 +98,14 @@
                                                 {{replaceFileName(countryForm.Flag)}}
                                             </span>
                                         </div>
+
                                         <span class="input-group-addon btn btn-default btn-file" *ngIf="!countryForm.Flag">
                                             <label for="Flag" class="custom-file-upload">
                                                 <i class="fa fa-cloud-upload"></i> Upload
                                             </label>
-                                            <input id="Flag" [(ngModel)]="countryForm.Flag" name="Flag" type="file"
-                                                ng2FileSelect [uploader]="uploader">
+                                            <input id="Flag" name="Flag" type="file" ng2FileSelect [uploader]="uploader">
                                         </span>
-                                        <a *ngIf="countryForm.Flag" (click)="countryForm.Flag=null" class="input-group-addon btn btn-default fileinput-exists"
+                                        <a *ngIf="countryForm.Flag" (click)="uploader.queue.length > 0" class="input-group-addon btn btn-default fileinput-exists"
                                             data-dismiss="fileinput">Remove</a>
                                     </div>
 
@@ -142,44 +142,73 @@
                                 </div>
                                 <br>
                                 <mat-form-field>
-                                    <input matInput (keyup)="filterCountries($event.target.value)" placeholder="Search">
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                                 </mat-form-field>
                                 <div class="x">
-                                    <table mat-table [dataSource]="countriesDataSource" matSort>
+                                    <table mat-table #table [dataSource]="countriesDataSource" matSort>
+
+                                        <!-- Position Column -->
                                         <ng-container matColumnDef="select">
+
                                             <th mat-header-cell *matHeaderCellDef>
-                                                <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>
+                                                <!-- <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>-->
                                             </th>
                                             <td mat-cell *matCellDef="let element">
                                                 <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
                                             </td>
                                         </ng-container>
-
-                                        <ng-container matColumnDef="ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                                        <ng-container matColumnDef="Id">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+
+
                                         </ng-container>
+
+
+                                        <!-- Name Column -->
                                         <ng-container matColumnDef="Name">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+
                                         </ng-container>
+
+                                        <!-- Weight Column -->
                                         <ng-container matColumnDef="Name2">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+
                                         </ng-container>
+
+                                        <!-- Symbol Column -->
                                         <ng-container matColumnDef="Nationality">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nationality </th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationality</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Nationality}} </td>
+
                                         </ng-container>
+
                                         <ng-container matColumnDef="Currency code">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Currency code </th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code </th>
                                             <td mat-cell *matCellDef="let element"> {{element.ST_CUR_COD}} </td>
+
+
                                         </ng-container>
+
                                         <ng-container matColumnDef="Phone code">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code</th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
                                             <td mat-cell *matCellDef="let element"> {{element.Phone_Code}} </td>
+
                                         </ng-container>
+
+                                        <ng-container matColumnDef="Flag">
+                                            <th mat-header-cell *matHeaderCellDef>Flag </th>
+                                            <td mat-cell *matCellDef="let element"> <img style="    width: 20px;
+                                                    height: 20px;"
+                                                    src="{{element.Flag}}"></td>
+
+                                        </ng-container>
+
                                         <ng-container matColumnDef="actions">
+
                                             <th mat-header-cell *matHeaderCellDef> </th>
                                             <td mat-cell *matCellDef="let element">
                                                 <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
@@ -188,11 +217,19 @@
                                                     [popoverMessage]="'are you sure to delete?'" placement="left"
                                                     (confirm)="deleteCountry(element.Id)" ngbTooltip="Delete"></i>
                                             </td>
+
                                         </ng-container>
+
+
                                         <tr mat-header-row *matHeaderRowDef="countryTableColumns"></tr>
                                         <tr mat-row *matRowDef="let row; columns: countryTableColumns;"></tr>
+
+
                                     </table>
-                                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                                        [showFirstLastButtons]="true"></mat-paginator>
+
+
                                 </div>
                             </div>
 
@@ -211,38 +248,51 @@
                                     </div>
                                 </div>
                                 <mat-form-field>
-                                    <input matInput (keyup)="filtercities($event.target.value)" placeholder="Search">
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                                 </mat-form-field>
                                 <div class="x">
-                                    <table mat-table [dataSource]="citiesDataSource" matSort>
+                                    <table mat-table #table2 [dataSource]="citiesDataSource" matSort>
+
+                                        <!-- Position Column -->
                                         <ng-container matColumnDef="select">
                                             <th mat-header-cell *matHeaderCellDef>
-                                                <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>
+                                                <!-- <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>-->
                                             </th>
                                             <td mat-cell *matCellDef="let element">
                                                 <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
                                             </td>
                                         </ng-container>
-
-                                        <ng-container matColumnDef="ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                                        <ng-container matColumnDef="Id">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+
                                         </ng-container>
+
+
+                                        <!-- Name Column -->
                                         <ng-container matColumnDef="Name">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+
                                         </ng-container>
+
+                                        <!-- Weight Column -->
                                         <ng-container matColumnDef="Name2">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+
                                         </ng-container>
-                                        <ng-container matColumnDef="Country">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
+
+                                        <!-- Symbol Column -->
+                                        <ng-container matColumnDef="ST_CNT_ID">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
                                             <td mat-cell *matCellDef="let element">
-                                                {{getCountryName(element.ST_CNT_ID)}}
-                                            </td>
+                                                {{getCountryName(element.ST_CNT_ID)}} </td>
+
                                         </ng-container>
+
                                         <ng-container matColumnDef="actions">
+
                                             <th mat-header-cell *matHeaderCellDef> </th>
                                             <td mat-cell *matCellDef="let element">
                                                 <i (click)="updateCity(element)" class="fa fa-edit" placement="left"
@@ -251,12 +301,20 @@
                                                     [popoverMessage]="'are you sure to delete?'" placement="left"
                                                     (confirm)="deleteCity(element.Id)" ngbTooltip="Delete"></i>
                                             </td>
+
                                         </ng-container>
+
 
                                         <tr mat-header-row *matHeaderRowDef="cityTableColumns"></tr>
                                         <tr mat-row *matRowDef="let row; columns: cityTableColumns;"></tr>
+
+
+
+
+
                                     </table>
-                                    <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                    <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 25, 100]"
+                                        [showFirstLastButtons]="true"></mat-paginator>
                                 </div>
 
                                 <div class="hr-line-dashed"></div>
@@ -338,20 +396,20 @@
                                     </div>
                                 </div>
                                 <mat-form-field>
-                                    <input matInput (keyup)="filterAreas($event.target.value)" placeholder="Search">
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                                 </mat-form-field>
                                 <div class="x">
-                                    <table mat-table [dataSource]="areasDataSource" matSort>
+                                    <table mat-table #table3 [dataSource]="areasDataSource" matSort>
                                         <ng-container matColumnDef="select">
                                             <th mat-header-cell *matHeaderCellDef>
-                                                <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>
+                                                <!-- <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>-->
                                             </th>
                                             <td mat-cell *matCellDef="let element">
                                                 <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
                                             </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="ID">
+                                        <ng-container matColumnDef="Id">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
                                             <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
                                         </ng-container>
@@ -363,13 +421,13 @@
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                                         </ng-container>
-                                        <ng-container matColumnDef="Country">
+                                        <ng-container matColumnDef="ST_CNT_ID">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
                                             <td mat-cell *matCellDef="let element">
                                                 {{getCountryName(element.ST_CNT_ID)}}
                                             </td>
                                         </ng-container>
-                                        <ng-container matColumnDef="City">
+                                        <ng-container matColumnDef="ST_CTY_ID">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
                                             <td mat-cell *matCellDef="let element"> {{getCityName(element.ST_CTY_ID)}}
                                             </td>
