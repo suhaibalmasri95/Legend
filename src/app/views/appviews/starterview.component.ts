@@ -170,6 +170,8 @@ export class StarterViewComponent implements OnInit {
           this.countriesDataSource = new MatTableDataSource<Country>(this.countries);
           this.countryForm = new Country;
           form.resetForm();
+          this.submit = false;
+
         });
       });
     }
@@ -210,6 +212,7 @@ export class StarterViewComponent implements OnInit {
         this.citiesDataSource = new MatTableDataSource<City>(this.cities);
         this.cityForm = new City;
         form.resetForm();
+        this.submit2 = false;
       });
     });
 
@@ -262,6 +265,8 @@ export class StarterViewComponent implements OnInit {
         this.areasDataSource = new MatTableDataSource<Area>(this.areas);
         this.areaForm = new Area;
         form.resetForm();
+        this.submit3 = false;
+
       });
 
     });
