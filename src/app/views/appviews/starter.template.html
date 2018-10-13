@@ -128,12 +128,12 @@
                     <mat-tab-group (selectedTabChange)="showCityAreaForm($event)">
                         <mat-tab label="Countries">
 
-
                             <div class="col-md-12">
                                 <div class="html5buttons">
                                     <br>
                                     <div class="dt-buttons btn-group">
 
+                                        <span class="btn btn-danger buttons-delete" style="font-size: 11px"><span>Delete</span></span>
                                         <a class="btn btn-default buttons-csv buttons-html5"><span>CSV</span></a>
                                         <a class="btn btn-default buttons-excel buttons-html5"><span>Excel</span></a>
                                         <a (click)="ExportToPdf(countries)" class="btn btn-default buttons-pdf buttons-html5"><span>PDF</span></a>
@@ -144,64 +144,65 @@
                                 <mat-form-field>
                                     <input matInput (keyup)="filterCountries($event.target.value)" placeholder="Search">
                                 </mat-form-field>
-                                <table mat-table [dataSource]="countriesDataSource">
-                                    <ng-container matColumnDef="select">
-                                        <th mat-header-cell *matHeaderCellDef> </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
-                                        </td>
-                                    </ng-container>
+                                <div class="x">
+                                    <table mat-table [dataSource]="countriesDataSource" matSort>
+                                        <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
+                                            </td>
+                                        </ng-container>
 
-                                    <ng-container matColumnDef="ID">
-                                        <th mat-header-cell *matHeaderCellDef>ID
-                                        </th>
-
-                                        <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
-                                        <mat-divider [vertical]="true"></mat-divider>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Name">
-                                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Name2">
-                                        <th mat-header-cell *matHeaderCellDef> Name2 </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Nationality">
-                                        <th mat-header-cell *matHeaderCellDef> Nationality </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Nationality}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Currency code">
-                                        <th mat-header-cell *matHeaderCellDef> Currency code </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.ST_CUR_COD}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Phone code">
-                                        <th mat-header-cell *matHeaderCellDef>Phone code</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Phone_Code}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="actions">
-                                        <th mat-header-cell *matHeaderCellDef> </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
-                                                ngbTooltip="Edit"></i>
-                                            <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
-                                                [popoverMessage]="'are you sure to delete?'" placement="left" (confirm)="deleteCountry(element.Id)"
-                                                ngbTooltip="Delete"></i>
-                                        </td>
-                                    </ng-container>
-                                    <tr mat-header-row *matHeaderRowDef="countryTableColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: countryTableColumns;"></tr>
-                                </table>
-                                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
+                                        <ng-container matColumnDef="ID">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Name">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Name2">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Nationality">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nationality </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Nationality}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Currency code">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Currency code </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.ST_CUR_COD}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Phone code">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Phone_Code}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="actions">
+                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
+                                                    ngbTooltip="Edit"></i>
+                                                <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                    [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                    (confirm)="deleteCountry(element.Id)" ngbTooltip="Delete"></i>
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="countryTableColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: countryTableColumns;"></tr>
+                                    </table>
+                                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                </div>
                             </div>
 
                         </mat-tab>
                         <mat-tab label="Cities">
-                            <div class="mat-elevation-z8x">
+                            <div class="xx">
                                 <div class="html5buttons">
                                     <br>
                                     <div class="dt-buttons btn-group">
+                                        <span class="btn btn-danger buttons-delete" style="font-size: 11px"><span>Delete</span></span>
 
                                         <a class="btn btn-default buttons-csv buttons-html5"><span>CSV</span></a>
                                         <a class="btn btn-default buttons-excel buttons-html5"><span>Excel</span></a>
@@ -212,47 +213,51 @@
                                 <mat-form-field>
                                     <input matInput (keyup)="filtercities($event.target.value)" placeholder="Search">
                                 </mat-form-field>
-                                <table mat-table [dataSource]="citiesDataSource">
-                                    <ng-container matColumnDef="select">
-                                        <th mat-header-cell *matHeaderCellDef></th>
-                                        <td mat-cell *matCellDef="let element">
-                                            <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
-                                        </td>
-                                    </ng-container>
+                                <div class="x">
+                                    <table mat-table [dataSource]="citiesDataSource" matSort>
+                                        <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
+                                            </td>
+                                        </ng-container>
 
-                                    <ng-container matColumnDef="ID">
-                                        <th mat-header-cell *matHeaderCellDef>ID </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Name">
-                                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Name2">
-                                        <th mat-header-cell *matHeaderCellDef> Name2 </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Country">
-                                        <th mat-header-cell *matHeaderCellDef> Country </th>
-                                        <td mat-cell *matCellDef="let element"> {{getCountryName(element.ST_CNT_ID)}}
-                                        </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="actions">
-                                        <th mat-header-cell *matHeaderCellDef> </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            <i (click)="updateCity(element)" class="fa fa-edit" placement="left"
-                                                ngbTooltip="Edit"></i>
-                                            <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
-                                                [popoverMessage]="'are you sure to delete?'" placement="left" (confirm)="deleteCity(element.Id)"
-                                                ngbTooltip="Delete"></i>
-                                        </td>
-                                    </ng-container>
+                                        <ng-container matColumnDef="ID">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Name">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Name2">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Country">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{getCountryName(element.ST_CNT_ID)}}
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="actions">
+                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <i (click)="updateCity(element)" class="fa fa-edit" placement="left"
+                                                    ngbTooltip="Edit"></i>
+                                                <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                    [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                    (confirm)="deleteCity(element.Id)" ngbTooltip="Delete"></i>
+                                            </td>
+                                        </ng-container>
 
-                                    <tr mat-header-row *matHeaderRowDef="cityTableColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: cityTableColumns;"></tr>
-                                </table>
-                                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
+                                        <tr mat-header-row *matHeaderRowDef="cityTableColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: cityTableColumns;"></tr>
+                                    </table>
+                                    <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                </div>
 
                                 <div class="hr-line-dashed"></div>
 
@@ -320,10 +325,11 @@
                             </div>
                         </mat-tab>
                         <mat-tab label="Areas">
-                            <div class="mat-elevation-z8x">
+                            <div class="xx">
 
                                 <div class="html5buttons">
                                     <div class="dt-buttons btn-group">
+                                        <span class="btn btn-danger buttons-delete" style="font-size: 11px"><span>Delete</span></span>
 
                                         <a class="btn btn-default buttons-csv buttons-html5"><span>CSV</span></a>
                                         <a class="btn btn-default buttons-excel buttons-html5"><span>Excel</span></a>
@@ -334,55 +340,57 @@
                                 <mat-form-field>
                                     <input matInput (keyup)="filterAreas($event.target.value)" placeholder="Search">
                                 </mat-form-field>
-                                <table mat-table [dataSource]="areasDataSource">
-                                    <ng-container matColumnDef="select">
-                                        <th mat-header-cell *matHeaderCellDef></th>
-                                        <td mat-cell *matCellDef="let element">
-                                            <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
-                                        </td>
-                                    </ng-container>
+                                <div class="x">
+                                    <table mat-table [dataSource]="areasDataSource" matSort>
+                                        <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
+                                            </td>
+                                        </ng-container>
 
-                                    <ng-container matColumnDef="ID">
-                                        <th mat-header-cell *matHeaderCellDef>ID
-                                        </th>
+                                        <ng-container matColumnDef="ID">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Name">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Name2">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Country">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{getCountryName(element.ST_CNT_ID)}}
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="City">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
+                                            <td mat-cell *matCellDef="let element"> {{getCityName(element.ST_CTY_ID)}}
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="actions">
+                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <i (click)="updateArea(element)" class="fa fa-edit" placement="left"
+                                                    ngbTooltip="Edit"></i>
+                                                <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                    [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                    (confirm)="deleteArea(element.Id)" ngbTooltip="Delete"></i>
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="areaTableColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: areaTableColumns;"></tr>
+                                    </table>
 
-                                        <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
-                                        <mat-divider [vertical]="true"></mat-divider>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Name">
-                                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Name2">
-                                        <th mat-header-cell *matHeaderCellDef> Name2 </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Country">
-                                        <th mat-header-cell *matHeaderCellDef> Country </th>
-                                        <td mat-cell *matCellDef="let element"> {{getCountryName(element.ST_CNT_ID)}}
-                                        </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="City">
-                                        <th mat-header-cell *matHeaderCellDef> City </th>
-                                        <td mat-cell *matCellDef="let element"> {{getCityName(element.ST_CTY_ID)}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="actions">
-                                        <th mat-header-cell *matHeaderCellDef> </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            <i (click)="updateArea(element)" class="fa fa-edit" placement="left"
-                                                ngbTooltip="Edit"></i>
-                                            <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
-                                                [popoverMessage]="'are you sure to delete?'" placement="left" (confirm)="deleteArea(element.Id)"
-                                                ngbTooltip="Delete"></i>
-                                        </td>
-                                    </ng-container>
-                                    <tr mat-header-row *matHeaderRowDef="areaTableColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: areaTableColumns;"></tr>
-                                </table>
+                                    <mat-paginator #paginator3 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
-                                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
-
+                                </div>
 
                                 <div class="hr-line-dashed"></div>
 

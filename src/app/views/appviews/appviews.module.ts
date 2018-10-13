@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DataTablesModule } from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule } from '@angular/material';
+import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule, MatSortModule } from '@angular/material';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { MatDividerModule } from '@angular/material/divider';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -36,6 +36,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
     MatTabsModule,
     MatInputModule,
     ConfirmationPopoverModule.forRoot({

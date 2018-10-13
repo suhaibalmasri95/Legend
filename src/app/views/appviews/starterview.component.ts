@@ -9,7 +9,7 @@ import { Country } from '../../models/country';
 import { Area } from '../../models/Area';
 import { environment } from '../../../environments/environment';
 import { Subject } from 'rxjs';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -30,7 +30,7 @@ export class StarterViewComponent implements OnInit {
   currencies: Currency[];
 
   countryTableColumns: string[] = ['select', 'ID', 'Name', 'Name2', 'Nationality', 'Currency code', 'Phone code', 'actions'];
-  countriesDataSource = new MatTableDataSource<Country>();
+  countriesDataSource = new MatTableDataSource();
 
   cityTableColumns: string[] = ['select', 'ID', 'Name', 'Name2', 'Country', 'actions'];
   citiesDataSource = new MatTableDataSource<City>();
@@ -47,6 +47,11 @@ export class StarterViewComponent implements OnInit {
   extraForm: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatPaginator) paginator2: MatPaginator;
+  // @ViewChild(MatPaginator) paginator3: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort2: MatSort;
+  @ViewChild(MatSort) sort3: MatSort;
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private coreService: CoreService) { }
 
@@ -60,17 +65,23 @@ export class StarterViewComponent implements OnInit {
       this.countries = data.country;
       this.LockUps = data.lockUp;
       this.currencies = data.currencies;
-      // this.ExportToPdf(this.countries);
+
+      this.countriesDataSource = new MatTableDataSource<Country>(this.countries);
+      this.citiesDataSource = new MatTableDataSource<City>(this.cities);
+      this.areasDataSource = new MatTableDataSource<Area>(this.areas);
+
+      this.countriesDataSource.paginator = this.paginator;
+      // this.citiesDataSource.paginator = this.paginator2;
+      // this.areasDataSource.paginator = this.paginator3;
+
+      this.countriesDataSource.sort = this.sort;
+      this.citiesDataSource.sort = this.sort2;
+      this.areasDataSource.sort = this.sort3;
+
     });
 
 
-    this.countriesDataSource = new MatTableDataSource<Country>(this.countries);
-    this.citiesDataSource = new MatTableDataSource<City>(this.cities);
-    this.areasDataSource = new MatTableDataSource<Area>(this.areas);
 
-    this.countriesDataSource.paginator = this.paginator;
-    this.citiesDataSource.paginator = this.paginator;
-    this.areasDataSource.paginator = this.paginator;
 
 
     this.uploader = new FileUploader({
@@ -183,7 +194,7 @@ export class StarterViewComponent implements OnInit {
     this.countryForm.Refernce_No = country.Refernce_No;
     this.countryForm.Loc_Status = country.Loc_Status;
     this.countryForm.Phone_Code = country.Phone_Code;
-    this.countryForm.selected = country.selected;
+    this.countryForm.selected = true;
   }
 
 

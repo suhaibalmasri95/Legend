@@ -86,13 +86,19 @@ td.mat-cell.cdk-column-actions.mat-column-actions{
   text-align: center;
 }
 
+td.mat-cell.cdk-column-select.mat-column-select{
+  text-align: center;
+  padding-right: 15px;
+}
+ 
+
 .mat-column-select {
   width: 5em;
 }
 
 tr.mat-header-row {
   height: 35px!important;
-  background-color: #e6e6e661;
+  background-color: #fff;
 }
 
 input[type="file"] {
@@ -108,13 +114,12 @@ input[type="file"] {
   padding: 2px 12px;
 }
 
-.mat-row:nth-child(even) {
+.mat-row:nth-child(odd) {
   background-color: #f6f6f6;
-  height: 2.5em;
 }
 
-.mat-row:nth-child(odd){
-  //background-color:#b1cfc9;
+ tr.mat-row{
+    height: 40px !important;
   }
 
   .mat-tab-body-wrapper {
@@ -149,4 +154,17 @@ input[type="file"] {
 
 .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
   background-color: #11c2a1;
+}
+
+table.mat-table {
+  border: 1px solid #e0e0e0;
+}
+td.mat-cell,  th.mat-header-cell {
+  border-right: 1px solid #e0e0e0;
+  padding-left: 15px !important;
+}
+
+th.mat-header-cell.cdk-column-select.mat-column-select {
+  padding: 0 15px;
+  text-align: center;
 }
