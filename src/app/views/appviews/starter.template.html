@@ -114,7 +114,7 @@
                                     <br>
                                     <br>
                                     <div class="btn-group">
-                                        <input class="btn btn-default" type="reset" (click)="countryForm={};submit=false"
+                                        <input class="btn btn-default" type="reset" (click)="countryForm={};submit=false;form.$setpristine()"
                                             value="Rest" />
                                         <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                                     </div>
@@ -132,11 +132,10 @@
                                 <div class="html5buttons">
                                     <br>
                                     <div class="dt-buttons btn-group">
-
-                                        <span class="btn btn-danger buttons-delete" style="font-size: 11px"><span>Delete</span></span>
-                                        <a class="btn btn-default buttons-csv buttons-html5"><span>CSV</span></a>
-                                        <a class="btn btn-default buttons-excel buttons-html5"><span>Excel</span></a>
-                                        <a (click)="ExportToPdf(countries)" class="btn btn-default buttons-pdf buttons-html5"><span>PDF</span></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"><span>CSV</span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','country')"><span>Excel</span></a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"><span>PDF</span></a>
                                         <a class="btn btn-default buttons-print"><span>Print</span></a>
                                     </div>
                                 </div>
@@ -147,69 +146,57 @@
                                 <div class="x">
                                     <table mat-table #table [dataSource]="countriesDataSource" matSort>
 
-                                        <!-- Position Column -->
                                         <ng-container matColumnDef="select">
-
                                             <th mat-header-cell *matHeaderCellDef>
-                                                <!-- <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>-->
+                                                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                                </mat-checkbox>
                                             </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
+                                            <td mat-cell *matCellDef="let row">
+                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                                    [checked]="selection.isSelected(row)">
+                                                </mat-checkbox>
                                             </td>
                                         </ng-container>
+
                                         <ng-container matColumnDef="Id">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
-
-
                                         </ng-container>
 
-
-                                        <!-- Name Column -->
                                         <ng-container matColumnDef="Name">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
-
                                         </ng-container>
 
-                                        <!-- Weight Column -->
                                         <ng-container matColumnDef="Name2">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
-
                                         </ng-container>
 
-                                        <!-- Symbol Column -->
                                         <ng-container matColumnDef="Nationality">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationality</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Nationality}} </td>
-
                                         </ng-container>
 
                                         <ng-container matColumnDef="Currency code">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code </th>
                                             <td mat-cell *matCellDef="let element"> {{element.ST_CUR_COD}} </td>
-
-
                                         </ng-container>
 
                                         <ng-container matColumnDef="Phone code">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
                                             <td mat-cell *matCellDef="let element"> {{element.Phone_Code}} </td>
-
                                         </ng-container>
 
                                         <ng-container matColumnDef="Flag">
                                             <th mat-header-cell *matHeaderCellDef>Flag </th>
-                                            <td mat-cell *matCellDef="let element"> <img style="    width: 20px;
-                                                    height: 20px;"
-                                                    src="{{element.Flag}}"></td>
-
+                                            <td mat-cell *matCellDef="let element">
+                                                <img style="width: 20px; height: 20px;" src="{{element.Flag}}"></td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="actions">
-
-                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                            <th mat-header-cell *matHeaderCellDef>Actions</th>
                                             <td mat-cell *matCellDef="let element">
                                                 <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
                                                     ngbTooltip="Edit"></i>
@@ -217,18 +204,14 @@
                                                     [popoverMessage]="'are you sure to delete?'" placement="left"
                                                     (confirm)="deleteCountry(element.Id)" ngbTooltip="Delete"></i>
                                             </td>
-
                                         </ng-container>
-
 
                                         <tr mat-header-row *matHeaderRowDef="countryTableColumns"></tr>
                                         <tr mat-row *matRowDef="let row; columns: countryTableColumns;"></tr>
 
-
                                     </table>
                                     <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"
                                         [showFirstLastButtons]="true"></mat-paginator>
-
 
                                 </div>
                             </div>
@@ -239,61 +222,67 @@
                                 <div class="html5buttons">
                                     <br>
                                     <div class="dt-buttons btn-group">
-                                        <span class="btn btn-danger buttons-delete" style="font-size: 11px"><span>Delete</span></span>
-
-                                        <a class="btn btn-default buttons-csv buttons-html5"><span>CSV</span></a>
-                                        <a class="btn btn-default buttons-excel buttons-html5"><span>Excel</span></a>
-                                        <a class="btn btn-default buttons-pdf buttons-html5"><span>PDF</span></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','city')"><span>CSV</span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','city')"><span>Excel</span></a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','city')"><span>PDF</span></a>
                                         <a class="btn btn-default buttons-print"><span>Print</span></a>
                                     </div>
                                 </div>
-                                <mat-form-field>
-                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-                                </mat-form-field>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Country" (selectionChange)="reloadCityTable(cityForm.ST_CNT_ID)"
+                                            [(ngModel)]="cityForm.ST_CNT_ID">
+                                            <mat-option *ngFor="let country of countries" [value]="country.Id">
+                                                {{country.Name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
                                 <div class="x">
                                     <table mat-table #table2 [dataSource]="citiesDataSource" matSort>
 
-                                        <!-- Position Column -->
                                         <ng-container matColumnDef="select">
                                             <th mat-header-cell *matHeaderCellDef>
-                                                <!-- <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>-->
+                                                <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                                                    [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                                                </mat-checkbox>
                                             </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
+                                            <td mat-cell *matCellDef="let row">
+                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                                    [checked]="selection.isSelected(row)">
+                                                </mat-checkbox>
                                             </td>
                                         </ng-container>
+
                                         <ng-container matColumnDef="Id">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
-
                                         </ng-container>
 
-
-                                        <!-- Name Column -->
                                         <ng-container matColumnDef="Name">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
-
                                         </ng-container>
 
-                                        <!-- Weight Column -->
                                         <ng-container matColumnDef="Name2">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                                             <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
-
                                         </ng-container>
 
-                                        <!-- Symbol Column -->
                                         <ng-container matColumnDef="ST_CNT_ID">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
-                                            <td mat-cell *matCellDef="let element">
-                                                {{getCountryName(element.ST_CNT_ID)}} </td>
-
+                                            <td mat-cell *matCellDef="let element">{{getCountryName(element.ST_CNT_ID)}}
+                                            </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="actions">
-
-                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                            <th mat-header-cell *matHeaderCellDef>Actions</th>
                                             <td mat-cell *matCellDef="let element">
                                                 <i (click)="updateCity(element)" class="fa fa-edit" placement="left"
                                                     ngbTooltip="Edit"></i>
@@ -301,16 +290,10 @@
                                                     [popoverMessage]="'are you sure to delete?'" placement="left"
                                                     (confirm)="deleteCity(element.Id)" ngbTooltip="Delete"></i>
                                             </td>
-
                                         </ng-container>
-
 
                                         <tr mat-header-row *matHeaderRowDef="cityTableColumns"></tr>
                                         <tr mat-row *matRowDef="let row; columns: cityTableColumns;"></tr>
-
-
-
-
 
                                     </table>
                                     <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 25, 100]"
@@ -370,7 +353,7 @@
                                                 <div class="col-md-8 text-right">
                                                     <br>
                                                     <br>
-                                                    <input class="btn btn-default" type="reset" (click)="cityForm={};submit2=false"
+                                                    <input class="btn btn-default" type="reset" (click)="cityForm={};submit2=false;form.$setpristine()"
                                                         value="Rest" />
 
                                                     <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
@@ -387,28 +370,52 @@
 
                                 <div class="html5buttons">
                                     <div class="dt-buttons btn-group">
-                                        <span class="btn btn-danger buttons-delete" style="font-size: 11px"><span>Delete</span></span>
-
-                                        <a class="btn btn-default buttons-csv buttons-html5"><span>CSV</span></a>
-                                        <a class="btn btn-default buttons-excel buttons-html5"><span>Excel</span></a>
-                                        <a class="btn btn-default buttons-pdf buttons-html5"><span>PDF</span></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','area')"><span>CSV</span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','area')"><span>Excel</span></a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','area')"><span>PDF</span></a>
                                         <a class="btn btn-default buttons-print"><span>Print</span></a>
                                     </div>
                                 </div>
-                                <mat-form-field>
-                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-                                </mat-form-field>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Country" (selectionChange)="reloadCityTable(areaForm.ST_CNT_ID)"
+                                            [(ngModel)]="areaForm.ST_CNT_ID">
+                                            <mat-option *ngFor="let country of countries" [value]="country.Id">
+                                                {{country.Name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="city" [disabled]="!cities ||cities.length===0"
+                                            [(ngModel)]="areaForm.ST_CTY_ID" (selectionChange)="reloadAreaTable(areaForm.ST_CNT_ID,areaForm.ST_CTY_ID)">
+                                            <mat-option *ngFor="let city of cities" [value]="city.Id">
+                                                {{city.Name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
                                 <div class="x">
                                     <table mat-table #table3 [dataSource]="areasDataSource" matSort>
                                         <ng-container matColumnDef="select">
                                             <th mat-header-cell *matHeaderCellDef>
-                                                <!-- <mat-checkbox [(ngModel)]="selectedAll"> </mat-checkbox>-->
+                                                <mat-checkbox (change)="$event ? masterToggle3() : null" [checked]="selection3.hasValue() && isAllSelected3()"
+                                                    [indeterminate]="selection3.hasValue() && !isAllSelected3()">
+                                                </mat-checkbox>
                                             </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <mat-checkbox [(ngModel)]="element.selected"> </mat-checkbox>
+                                            <td mat-cell *matCellDef="let row">
+                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                                    [checked]="selection.isSelected(row)">
+                                                </mat-checkbox>
                                             </td>
                                         </ng-container>
-
                                         <ng-container matColumnDef="Id">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
                                             <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
@@ -433,7 +440,7 @@
                                             </td>
                                         </ng-container>
                                         <ng-container matColumnDef="actions">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                            <th mat-header-cell *matHeaderCellDef>Actions</th>
                                             <td mat-cell *matCellDef="let element">
                                                 <i (click)="updateArea(element)" class="fa fa-edit" placement="left"
                                                     ngbTooltip="Edit"></i>
@@ -516,7 +523,7 @@
                                                 <div class="col-md-5 text-right">
                                                     <br>
                                                     <br>
-                                                    <input class="btn btn-default" type="reset" (click)="areaForm={};submit3=false"
+                                                    <input class="btn btn-default" type="reset" (click)="areaForm={};submit3=false;form.$setpristine()"
                                                         value="Rest" />
 
                                                     <input class="btn btn-primary " type="submit" value="Save" (click)="submit3=true" />

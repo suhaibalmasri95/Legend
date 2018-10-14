@@ -115,7 +115,7 @@ input[type="file"] {
 }
 
 .mat-row:nth-child(odd) {
-  background-color: #f6f6f6;
+  background-color: #f9f9f9;
 }
 
  tr.mat-row{
@@ -164,7 +164,18 @@ td.mat-cell,  th.mat-header-cell {
   padding-left: 15px !important;
 }
 
-th.mat-header-cell.cdk-column-select.mat-column-select {
+th.mat-header-cell.cdk-column-select.mat-column-select ,th.mat-header-cell.cdk-column-actions.mat-column-actions {
   padding: 0 15px;
   text-align: center;
+}
+
+tr.mat-header-row  .mat-header-cell{
+  font-weight: 600;
+  color: #515151;
+  font-size: 14px;
+  height: 44px;
+}
+
+tr.mat-header-row  .mat-header-cell[aria-sort]{
+    background: #e3e2e2; 
 }

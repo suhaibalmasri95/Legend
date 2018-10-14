@@ -12,10 +12,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { DataTablesModule } from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule, MatSortModule } from '@angular/material';
+import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule } from '@angular/material';
+import { MatSortModule, MatSelectModule, MatSnackBarModule } from '@angular/material';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { MatDividerModule } from '@angular/material/divider';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatSortModule,
     MatTabsModule,
     MatInputModule,
+    MatSelectModule,
+    MatSnackBarModule,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
     }),
