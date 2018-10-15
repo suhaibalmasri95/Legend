@@ -19,7 +19,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 
 export class StarterViewComponent implements OnInit, AfterViewInit {
-  url: string = environment.azureUrl + 'core';
+  url: string = environment.localUrl + 'core';
 
   countryForm: Country;
   countries: Country[];

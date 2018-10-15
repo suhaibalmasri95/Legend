@@ -132,11 +132,11 @@
                                 <div class="html5buttons">
                                     <br>
                                     <div class="dt-buttons btn-group">
-                                        <a class="btn btn-default buttons-csv buttons-html5"><i class="fa fa-trash"></i></a>
-                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"><span>CSV</span></a>
-                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','country')"><span>Excel</span></a>
-                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"><span>PDF</span></a>
-                                        <a class="btn btn-default buttons-print"><span>Print</span></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5"><span>  <img src="assets/images/Trash-can.png"></span></a>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"><span>  <img src="assets/images/csv.jpg"></span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','country')"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"><span><img src="assets/images/pdf.jpg"></span></a>
+                                        <a class="btn btn-default buttons-print"><span><img src="assets/images/print.jpg"></span></a>
                                     </div>
                                 </div>
                                 <br>
@@ -152,7 +152,7 @@
                                                     [indeterminate]="selection.hasValue() && !isAllSelected()">
                                                 </mat-checkbox>
                                             </th>
-                                            <td mat-cell *matCellDef="let row">
+                                            <td style="width: 5%" mat-cell *matCellDef="let row">
                                                 <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
                                                     [checked]="selection.isSelected(row)">
                                                 </mat-checkbox>
@@ -161,43 +161,43 @@
 
                                         <ng-container matColumnDef="Id">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                                            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.Id}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="Name">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            <td style="width: 15%"  mat-cell *matCellDef="let element"> {{element.Name}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="Name2">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                            <td style="width: 15%"  mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="Nationality">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationality</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Nationality}} </td>
+                                            <td style="width: 20%"  mat-cell *matCellDef="let element"> {{element.Nationality}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="Currency code">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.ST_CUR_COD}} </td>
+                                            <td style="width: 10%"  mat-cell *matCellDef="let element"> {{element.ST_CUR_COD}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="Phone code">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Phone_Code}} </td>
+                                            <td style="width: 10%"  mat-cell *matCellDef="let element"> {{element.Phone_Code}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="Flag">
                                             <th mat-header-cell *matHeaderCellDef>Flag </th>
-                                            <td mat-cell *matCellDef="let element">
+                                            <td style="width: 10%"  mat-cell *matCellDef="let element">
                                                 <img style="width: 20px; height: 20px;" src="{{element.Flag}}"></td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="actions">
                                             <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                            <td mat-cell *matCellDef="let element">
+                                            <td style="width: 10%"  mat-cell *matCellDef="let element">
                                                 <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
                                                     ngbTooltip="Edit"></i>
                                                 <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
