@@ -76,7 +76,7 @@
                                         required>
                                         <option [ngValue]="">Select</option>
 
-                                        <option *ngFor="let status of LockUps" [ngValue]="status.Major_Code">{{status.Name}}</option>
+                                        <option *ngFor="let status of LockUps" [ngValue]="status.Id">{{status.Name}}</option>
                                     </select>
                                     <!-- <span class="help-block" *ngIf="form.controls.Loc_Status&&form.controls.Loc_Status.invalid &&( form.controls.Loc_Status.touched|| form.controls.Loc_Status.dirty||form.submitted)">required</span> -->
                                 </div>

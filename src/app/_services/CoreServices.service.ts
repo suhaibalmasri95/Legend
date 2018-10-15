@@ -78,7 +78,7 @@ export class CoreService {
   ExportToPdf(fileName: string, Type: string) {
     window.open(this.utilitiesURl + '/ExportToPdf?fileName=' + fileName + '&Type=' + Type);
   }
-  ExportToCsv(fileName: string, Type: string){
+  ExportToCsv(fileName: string, Type: string) {
     window.open(this.utilitiesURl + '/ExportToCSV?fileName=' + fileName + '&Type=' + Type);
   }
   ExportToExcel(fileName: string, Type: string) {
