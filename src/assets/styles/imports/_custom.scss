@@ -82,7 +82,7 @@ table {
 }
 
 
-td.mat-cell.cdk-column-actions.mat-column-actions{
+td.mat-cell.cdk-column-actions.mat-column-actions ,.mat-column-Flag{
   text-align: center;
 }
 
@@ -98,7 +98,7 @@ td.mat-cell.cdk-column-select.mat-column-select{
 
 tr.mat-header-row {
   height: 35px!important;
-  background-color: #f8ac5940;
+  background-color: #fdead5;
 }
 
 input[type="file"] {
@@ -177,5 +177,13 @@ tr.mat-header-row  .mat-header-cell{
 }
 
 tr.mat-header-row  .mat-header-cell[aria-sort]{
-    background: #e3e2e2; 
+    background: #f5c794; 
+}
+
+.mat-row.not-active{
+  cursor: pointer;
+}
+
+.mat-row.active{
+  background: #a9d9e7; 
 }

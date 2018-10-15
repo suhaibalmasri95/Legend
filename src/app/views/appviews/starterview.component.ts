@@ -41,15 +41,13 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   areaTableColumns = ['select', 'Id', 'Name', 'Name2', 'ST_CNT_ID', 'ST_CTY_ID', 'actions'];
   areasDataSource: MatTableDataSource<Area>;
 
-
-  urlLoad: string;
-  uploader: FileUploader;
-  filePath: string;
-  dtTrigger: Subject<object> = new Subject();
-  extraForm: string;
   selection: SelectionModel<Country>;
   selection2: SelectionModel<City>;
   selection3: SelectionModel<Area>;
+
+  uploader: FileUploader;
+  extraForm: string;
+
   snackPosition: MatSnackBarHorizontalPosition;
 
   @ViewChild('paginator') paginator: MatPaginator;
@@ -76,22 +74,14 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     this.submit = false;
     this.submit2 = false;
     this.submit3 = false;
+    this.uploader = new FileUploader({ url: this.url + '/AddCountryFlag' });
+
     this.route.data.subscribe(data => {
       this.countries = data.country;
       this.LockUps = data.lockUp;
       this.currencies = data.currencies;
       this.countriesDataSource = new MatTableDataSource(data.country);
 
-    });
-
-
-
-    this.uploader = new FileUploader({
-      url: this.url + '/AddCountryFlag',
-      isHTML5: true,
-      allowedFileType: ['image'],
-      method: 'POST',
-      autoUpload: false
     });
 
 
@@ -148,6 +138,13 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     });
   }
 
+  renderCountryTable(data) {
+    this.countries = data;
+    this.countriesDataSource = new MatTableDataSource<Country>(data);
+    this.countriesDataSource.paginator = this.paginator;
+    this.countriesDataSource.sort = this.sort;
+  }
+
   renderCityTable(data) {
     this.cities = data;
     this.citiesDataSource = new MatTableDataSource<City>(data);
@@ -159,6 +156,12 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     this.areasDataSource = new MatTableDataSource<Area>(data);
     this.areasDataSource.paginator = this.paginator3;
     this.areasDataSource.sort = this.sort3;
+  }
+
+  reloadCountryTable() {
+    this.coreService.loadCountries().subscribe(data => {
+      this.renderCountryTable(data);
+    });
   }
 
   reloadCityTable(countryId) {
@@ -178,15 +181,14 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     this.uploader.uploadAll();
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
-        this.filePath = response;
         this.countryForm.Flag = response;
         this.http.post(this.url + (this.countryForm.selected ? '/UpdateCountry' : '/InsertCountry'), this.countryForm).subscribe(res => {
-          this.coreService.loadCountries().subscribe(data => {
-            this.countries = data;
-            this.countriesDataSource = new MatTableDataSource<Country>(this.countries);
-            this.countryForm = new Country;
-            form.resetForm();
-          });
+          this.uploader = new FileUploader({ url: this.url + '/AddCountryFlag' });
+
+          this.reloadCountryTable();
+          this.countryForm = new Country;
+          this.submit = false;
+          form.resetForm();
         });
       }
     };
@@ -200,6 +202,7 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     if (form.invalid) {
       return;
     }
+
     this.countryForm = this.countryForm.selected ? this.countryForm : Object.assign({}, form.value);
     this.countryForm.Loc_Status = Number(this.countryForm.Loc_Status);
     if (this.uploader.queue.length > 0) {
@@ -207,14 +210,10 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     } else {
       this.http.post(this.url + (this.countryForm.selected ? '/UpdateCountry' : '/InsertCountry'), this.countryForm).subscribe(res => {
         this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-        this.coreService.loadCountries().subscribe(data => {
-          this.countries = data;
-          this.countriesDataSource = new MatTableDataSource<Country>(this.countries);
-          this.countryForm = new Country;
-          form.resetForm();
-          this.submit = false;
-
-        });
+        this.reloadCountryTable();
+        this.countryForm = new Country;
+        this.submit = false;
+        form.resetForm();
       });
     }
   }
@@ -222,14 +221,12 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   deleteCountry(id) {
     this.http.delete(this.url + '/DeleteCountry?countryId=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.coreService.loadCountries().subscribe(data => {
-        this.countries = data;
-        this.countriesDataSource = new MatTableDataSource<Country>(this.countries);
-      });
+      this.reloadCountryTable();
     });
   }
 
   updateCountry(country: Country) {
+    window.scroll(0, 0);
     this.countryForm = new Country;
     this.countryForm.Id = country.Id;
     this.countryForm.Name = country.Name;
@@ -239,6 +236,7 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     this.countryForm.Refernce_No = country.Refernce_No;
     this.countryForm.Loc_Status = country.Loc_Status;
     this.countryForm.Phone_Code = country.Phone_Code;
+    this.countryForm.Flag = country.Flag;
     this.countryForm.selected = true;
   }
 
@@ -267,6 +265,7 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   }
 
   updateCity(city: City) {
+    window.scroll(0, 1000);
     this.cityForm = new City;
     this.cityForm.Id = city.Id;
     this.cityForm.Name = city.Name;
@@ -305,8 +304,8 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   }
 
   updateArea(area: Area) {
+    window.scroll(0, 1000);
     this.areaForm = new Area;
-
     this.areaForm.Id = area.Id;
     this.areaForm.Name = area.Name;
     this.areaForm.Name2 = area.Name2;
