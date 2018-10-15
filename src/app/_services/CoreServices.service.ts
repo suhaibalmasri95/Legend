@@ -11,8 +11,8 @@ import { LockUp } from '../models/LockUp';
   providedIn: 'root'
 })
 export class CoreService {
-  url: string = environment.azureUrl + 'core';
-  utilitiesURl: string = environment.azureUrl + 'Utilites';
+  url: string = environment.localUrl + 'core';
+  utilitiesURl: string = environment.localUrl + 'Utilites';
   countries: Country[];
   cityForm: City;
   cities: City[];
