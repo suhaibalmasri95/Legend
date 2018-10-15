@@ -11,8 +11,8 @@ import { LockUp } from '../models/LockUp';
   providedIn: 'root'
 })
 export class CoreService {
-  url: string = environment.localUrl + 'core';
-  utilitiesURl: string = environment.localUrl + 'Utilites';
+  url: string = environment.azureUrl + 'core';
+  utilitiesURl: string = environment.azureUrl + 'Utilites';
   countries: Country[];
   cityForm: City;
   cities: City[];
@@ -75,14 +75,15 @@ export class CoreService {
     return this.http.get<LockUp[]>(this.url + '/LoadLockUpsByMajorCode?ID=' + majorCode);
   }
 
-  ExportToPdf(fileName: string, Type: string): Observable<Object[]> {
-    return this.http.get<Object[]>(this.utilitiesURl + '/ExportToPdf?fileName=' + fileName + '&Type=' + Type);
+  ExportToPdf(fileName: string, Type: string) {
+    window.open(this.utilitiesURl + '/ExportToPdf?fileName=' + fileName + '&Type=' + Type);
   }
-  ExportToCsv(fileName: string, Type: string): Observable<Object[]> {
-    return this.http.get<Object[]>(this.utilitiesURl + '/ExportToCSV?fileName=' + fileName + '&Type=' + Type);
+  ExportToCsv(fileName: string, Type: string){
+    window.open(this.utilitiesURl + '/ExportToCSV?fileName=' + fileName + '&Type=' + Type);
   }
-  ExportToExcel(fileName: string, Type: string): Observable<Object[]> {
-    return this.http.get<Object[]>(this.utilitiesURl + '/ExportToExcel?fileName=' + fileName + '&Type=' + Type);
+  ExportToExcel(fileName: string, Type: string) {
+    window.open(this.utilitiesURl + '/ExportToExcel?fileName=' + fileName + '&Type=' + Type);
+
   }
 }
 

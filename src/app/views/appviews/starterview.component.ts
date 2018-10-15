@@ -19,7 +19,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 
 export class StarterViewComponent implements OnInit, AfterViewInit {
-  url: string = environment.localUrl + 'core';
+  url: string = environment.azureUrl + 'core';
 
   countryForm: Country;
   countries: Country[];
@@ -334,13 +334,13 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   export(type, data) {
     switch (type) {
       case 'pdf':
-        this.coreService.ExportToPdf(data, data).subscribe();
+        this.coreService.ExportToPdf(data, data);
         break;
       case 'csv':
-        this.coreService.ExportToCsv(data, data).subscribe();
+        this.coreService.ExportToCsv(data, data);
         break;
       case 'excel':
-        this.coreService.ExportToExcel(data, data).subscribe();
+        this.coreService.ExportToExcel(data, data);
         break;
     }
 
