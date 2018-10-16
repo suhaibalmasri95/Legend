@@ -1,3 +1,5 @@
+import { BranchResolver } from './_resolvers/branch.resolver';
+import { BankResolver } from './_resolvers/bank.resolver';
 import { CountryResolver } from './_resolvers/country-reolver.resolver';
 import { LockUpResolver } from './_resolvers/lockup-reolver.resolver';
 import { Routes } from '@angular/router';
@@ -7,6 +9,8 @@ import { LoginComponent } from './views/appviews/login.component';
 import { BlankLayoutComponent } from './components/common/layouts/blankLayout.component';
 import { BasicLayoutComponent } from './components/common/layouts/basicLayout.component';
 import { CurrencyResolver } from './_resolvers/currency-reolver.resolver';
+import { BanksComponent } from './views/appviews/banks/banks.component';
+import { LockupAndCurrencyComponent } from './views/appviews/lockupAndCurrency/lockupAndCurrency.component';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -24,6 +28,23 @@ export const ROUTES: Routes = [
     children: [
       {
         path: 'starterview', component: StarterViewComponent,
+        resolve: {
+          lockUp: LockUpResolver,
+          country: CountryResolver,
+          currencies: CurrencyResolver
+        }
+      },
+      {
+        path: 'banks', component: BanksComponent,
+        resolve: {
+          banks: BankResolver,
+          country: CountryResolver,
+          lockUp: LockUpResolver,
+          currencies: CurrencyResolver
+        }
+      },
+      {
+        path: 'LockupAndCurrency', component: LockupAndCurrencyComponent,
         resolve: {
           lockUp: LockUpResolver,
           country: CountryResolver,

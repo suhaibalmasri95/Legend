@@ -14,7 +14,7 @@ export class CurrencyResolver implements Resolve<Currency[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<Currency[]> {
         return this.coreService.loadCurrencies().pipe(
             catchError(error => {
-                this.router.navigate(['/members']);
+                this.router.navigate(['/banks']);
                 return of(null);
             })
         );

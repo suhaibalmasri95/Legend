@@ -8,7 +8,6 @@ import { HttpClient } from '@angular/common/http';
 import { Country } from '../../models/country';
 import { Area } from '../../models/Area';
 import { environment } from '../../../environments/environment';
-import { Subject } from 'rxjs';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -32,7 +31,7 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   submit: boolean;
   submit2: boolean;
   submit3: boolean;
-  countryTableColumns = ['select', 'Id', 'Name', 'Name2', 'Nationality', 'Currency code', 'Phone code', 'Flag', 'actions'];
+  countryTableColumns = ['select', 'Id', 'Name', 'Name2', 'Nationality', 'Currency code', 'Phone code', 'Status', 'Flag', 'actions'];
   countriesDataSource: MatTableDataSource<Country>;
 
   cityTableColumns = ['select', 'Id', 'Name', 'Name2', 'ST_CNT_ID', 'actions'];

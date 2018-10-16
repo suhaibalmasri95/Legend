@@ -1,8 +1,10 @@
+import { Branch } from './../models/branch';
+import { Bank } from './../models/bank';
 import { Country } from './../models/country';
 import { Observable } from 'rxjs';
 import { Currency } from './../models/Currency';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { City } from '../models/City';
 import { Area } from '../models/Area';
@@ -85,6 +87,29 @@ export class CoreService {
     window.open(this.utilitiesURl + '/ExportToExcel?fileName=' + fileName + '&Type=' + Type);
 
   }
+
+  loadBanks(): Observable<Country[]> {
+    return this.http.get<Bank[]>(this.url + '/LoadCountries');
+  }
+
+  loadBranchs(countryId: number = null, cityId: number = null, langId: number = null): Observable<Branch[]> {
+    let queryString = '?cityId=';
+
+    if (cityId != null) {
+      queryString += cityId;
+    }
+    queryString += '&countryId=';
+    if (countryId != null) {
+      queryString += countryId;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+    }
+    return this.http.get<Branch[]>(this.url + '/LoadCities' + queryString);
+  }
+
+
 }
 
 

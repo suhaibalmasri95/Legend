@@ -17,11 +17,15 @@ import { MatSortModule, MatSelectModule, MatSnackBarModule } from '@angular/mate
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { BanksComponent } from './banks/banks.component';
+import { LockupAndCurrencyComponent } from './lockupAndCurrency/lockupAndCurrency.component';
 
 @NgModule({
   declarations: [
+    LoginComponent,
     StarterViewComponent,
-    LoginComponent
+    BanksComponent,
+    LockupAndCurrencyComponent
   ],
   imports: [
     RouterModule,

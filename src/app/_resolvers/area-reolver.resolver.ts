@@ -15,7 +15,7 @@ export class AreaResolver implements Resolve<Area[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<Area[]> {
         return this.coreService.loadAreas().pipe(
             catchError(error => {
-                this.router.navigate(['/members']);
+                this.router.navigate(['/banks']);
                 return of(null);
             })
         );
