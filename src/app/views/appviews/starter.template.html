@@ -201,25 +201,25 @@
 
                                         <ng-container matColumnDef="Phone code">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
-                                            <td style="width: 10%" mat-cell *matCellDef="let element">
+                                            <td style="width: 5%" mat-cell *matCellDef="let element">
                                                 {{element.Phone_Code}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="Status">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
                                                 <td style="width: 10%" mat-cell *matCellDef="let element">
-                                                    {{element.Status}} </td>
+                                                        {{getStatusName(element.Loc_Status)}} </td>
                                             </ng-container>
 
                                         <ng-container matColumnDef="Flag">
                                             <th mat-header-cell *matHeaderCellDef>Flag </th>
-                                            <td style="width: 10%" mat-cell *matCellDef="let element">
+                                            <td style="width: 5%" mat-cell *matCellDef="let element">
                                                 <img style="height: 30px;" src="{{element.Flag}}"></td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="actions">
                                             <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                            <td style="width: 10%" mat-cell *matCellDef="let element">
+                                            <td style="width: 20%" mat-cell *matCellDef="let element">
                                                 <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
                                                     ngbTooltip="Edit"></i>
                                                 <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"

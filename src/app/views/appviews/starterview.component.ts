@@ -365,8 +365,13 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
+  getStatusName(id: number) {
+    for (let index = 0; index < this.LockUps.length; index++) {
+      if (this.LockUps[index].Id === id) {
+        return this.LockUps[index].Name;
+      }
+    }
+  }
 
 
   isAllSelected() {
