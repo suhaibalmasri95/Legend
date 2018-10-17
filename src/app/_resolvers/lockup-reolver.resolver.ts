@@ -15,7 +15,7 @@ export class LockUpResolver implements Resolve<LockUp[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
         return this.coreService.LoadLockUpsByMajorCode().pipe(
             catchError(error => {
-                this.router.navigate(['/banks']);
+                this.router.navigate(['/LockupAndCurrency']);
                 return of(null);
             })
         );

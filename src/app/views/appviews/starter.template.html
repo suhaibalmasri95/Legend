@@ -193,19 +193,19 @@
                                                 {{element.Nationality}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Currency code">
+                                        <ng-container matColumnDef="ST_CUR_COD">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code </th>
                                             <td style="width: 10%" mat-cell *matCellDef="let element">
                                                 {{element.ST_CUR_COD}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Phone code">
+                                        <ng-container matColumnDef="Phone_Code">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
                                             <td style="width: 5%" mat-cell *matCellDef="let element">
                                                 {{element.Phone_Code}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Status">
+                                        <ng-container matColumnDef="Loc_Status">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
                                                 <td style="width: 10%" mat-cell *matCellDef="let element">
                                                         {{getStatusName(element.Loc_Status)}} </td>
@@ -241,7 +241,7 @@
 
                         </mat-tab>
                         <mat-tab label="Cities">
-                            <div class="xx">
+                            <div class="col-md-12">
                                 <div class="html5buttons">
                                     <br>
                                     <div class="dt-buttons btn-group">
@@ -288,8 +288,8 @@
                                                 </mat-checkbox>
                                             </th>
                                             <td mat-cell *matCellDef="let row">
-                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                                                    [checked]="selection.isSelected(row)">
+                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                                                    [checked]="selection2.isSelected(row)">
                                                 </mat-checkbox>
                                             </td>
                                         </ng-container>
@@ -401,7 +401,7 @@
                             </div>
                         </mat-tab>
                         <mat-tab label="Areas">
-                            <div class="xx">
+                            <div class="col-md-12">
 
                                 <div class="dt-buttons btn-group">
                                     <button class="btn btn-default" [disabled]="!selection3.hasValue()"
@@ -454,8 +454,8 @@
                                                 </mat-checkbox>
                                             </th>
                                             <td mat-cell *matCellDef="let row">
-                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                                                    [checked]="selection.isSelected(row)">
+                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection3.toggle(row) : null"
+                                                    [checked]="selection3.isSelected(row)">
                                                 </mat-checkbox>
                                             </td>
                                         </ng-container>

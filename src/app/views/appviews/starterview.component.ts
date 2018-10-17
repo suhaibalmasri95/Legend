@@ -1,12 +1,12 @@
+import { Area } from './../../models/Area';
 import { City } from './../../models/City';
 import { Currency } from './../../models/Currency';
 import { LockUp } from './../../models/LockUp';
 import { CoreService } from './../../_services/CoreServices.service';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { Country } from '../../models/country';
-import { Area } from '../../models/Area';
 import { environment } from '../../../environments/environment';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +17,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   templateUrl: 'starter.template.html'
 })
 
-export class StarterViewComponent implements OnInit, AfterViewInit {
+export class StarterViewComponent implements OnInit {
   url: string = environment.azureUrl + 'core';
 
   countryForm: Country;
@@ -31,7 +31,7 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   submit: boolean;
   submit2: boolean;
   submit3: boolean;
-  countryTableColumns = ['select', 'Id', 'Name', 'Name2', 'Nationality', 'Currency code', 'Phone code', 'Status', 'Flag', 'actions'];
+  countryTableColumns = ['select', 'Id', 'Name', 'Name2', 'Nationality', 'ST_CUR_COD', 'Phone_Code', 'Loc_Status', 'Flag', 'actions'];
   countriesDataSource: MatTableDataSource<Country>;
 
   cityTableColumns = ['select', 'Id', 'Name', 'Name2', 'ST_CNT_ID', 'actions'];
@@ -52,7 +52,8 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
   @ViewChild('paginator3') paginator3: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+
+  @ViewChild('table', { read: MatSort }) sort: MatSort;
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
   @ViewChild('table3', { read: MatSort }) sort3: MatSort;
 
@@ -60,12 +61,11 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.extraForm = '';
-    const initialSelection = [];
-    const allowMultiSelect = true;
-    this.selection = new SelectionModel<Country>(allowMultiSelect, initialSelection);
-    this.selection2 = new SelectionModel<City>(allowMultiSelect, initialSelection);
-    this.selection3 = new SelectionModel<Area>(allowMultiSelect, initialSelection);
     this.snackPosition = 'right';
+
+    this.selection = new SelectionModel<Country>(true, []);
+    this.selection2 = new SelectionModel<City>(true, []);
+    this.selection3 = new SelectionModel<Area>(true, []);
 
     this.countryForm = new Country();
     this.cityForm = new City();
@@ -75,21 +75,17 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     this.submit3 = false;
     this.uploader = new FileUploader({ url: this.url + '/AddCountryFlag' });
 
+
     this.route.data.subscribe(data => {
       this.countries = data.country;
       this.LockUps = data.lockUp;
       this.currencies = data.currencies;
-      this.countriesDataSource = new MatTableDataSource(data.country);
-
+      this.renderCountryTable(data.country);
     });
 
-
   }
 
-  ngAfterViewInit(): void {
-    this.countriesDataSource.paginator = this.paginator;
-    this.countriesDataSource.sort = this.sort;
-  }
+
 
   applyFilter(filterValue: string) {
     switch (this.extraForm) {
@@ -103,15 +99,6 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
         this.areasDataSource.filter = filterValue.trim().toLowerCase();
         break;
     }
-
-    // filterValue = filterValue.trim(); // Remove whitespace
-    // filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    // this.countriesDataSource.sort = this.sort;
-    // this.citiesDataSource.sort = this.sort2;
-    // this.areasDataSource.sort = this.sort3;
-    // this.countriesDataSource.paginator = this.paginator;
-    // this.citiesDataSource.paginator = this.paginator2;
-    // this.areasDataSource.paginator = this.paginator3;
   }
 
 
@@ -142,6 +129,15 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     this.countriesDataSource = new MatTableDataSource<Country>(data);
     this.countriesDataSource.paginator = this.paginator;
     this.countriesDataSource.sort = this.sort;
+
+    this.countriesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort.direction === 'asc' ? '3' : '1';
+      } else
+        if (typeof data[sortHeaderId] === 'string') {
+          return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+        }
+    };
   }
 
   renderCityTable(data) {
@@ -149,12 +145,30 @@ export class StarterViewComponent implements OnInit, AfterViewInit {
     this.citiesDataSource = new MatTableDataSource<City>(data);
     this.citiesDataSource.paginator = this.paginator2;
     this.citiesDataSource.sort = this.sort2;
+
+    this.citiesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort.direction === 'asc' ? '3' : '1';
+      } else
+        if (typeof data[sortHeaderId] === 'string') {
+          return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+        }
+    };
   }
   renderAreaTable(data) {
     this.areas = data;
     this.areasDataSource = new MatTableDataSource<Area>(data);
     this.areasDataSource.paginator = this.paginator3;
     this.areasDataSource.sort = this.sort3;
+
+    this.areasDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort.direction === 'asc' ? '3' : '1';
+      } else
+        if (typeof data[sortHeaderId] === 'string') {
+          return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+        }
+    };
   }
 
   reloadCountryTable() {

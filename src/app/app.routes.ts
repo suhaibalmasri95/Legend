@@ -47,7 +47,6 @@ export const ROUTES: Routes = [
         path: 'LockupAndCurrency', component: LockupAndCurrencyComponent,
         resolve: {
           lockUp: LockUpResolver,
-          country: CountryResolver,
           currencies: CurrencyResolver
         }
       }

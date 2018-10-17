@@ -110,6 +110,27 @@ export class CoreService {
   }
 
 
+  loadMajorCodes(): Observable<Country[]> {
+    return this.http.get<Bank[]>(this.url + '/LoadCountries');
+  }
+
+  loadMinorCodes(countryId: number = null, cityId: number = null, langId: number = null): Observable<Branch[]> {
+    let queryString = '?cityId=';
+
+    if (cityId != null) {
+      queryString += cityId;
+    }
+    queryString += '&countryId=';
+    if (countryId != null) {
+      queryString += countryId;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+    }
+    return this.http.get<Branch[]>(this.url + '/LoadCities' + queryString);
+  }
+
 }
 
 

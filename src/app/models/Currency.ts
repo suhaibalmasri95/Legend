@@ -7,4 +7,8 @@ export class Currency {
     IS_Deleted: number;
     Fract_Name: string;
     Fract_Name2: string;
+
+    Loc_Status: number;
+
+    selected: boolean;
 }

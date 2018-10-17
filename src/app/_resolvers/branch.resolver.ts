@@ -15,7 +15,7 @@ export class BranchResolver implements Resolve<Branch[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<Branch[]> {
         return this.coreService.loadBranchs().pipe(
             catchError(error => {
-                this.router.navigate(['/banks']);
+                this.router.navigate(['/LockupAndCurrency']);
                 return of(null);
             })
         );

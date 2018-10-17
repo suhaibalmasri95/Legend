@@ -115,6 +115,12 @@ export class BanksComponent implements OnInit {
     this.banksDataSource = new MatTableDataSource<Bank>(data);
     this.banksDataSource.paginator = this.paginator;
     this.banksDataSource.sort = this.sort;
+    this.banksDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+    };
   }
 
   renderBranchTable(data) {
@@ -122,6 +128,12 @@ export class BanksComponent implements OnInit {
     this.branchsDataSource = new MatTableDataSource<Branch>(data);
     this.branchsDataSource.paginator = this.paginator2;
     this.branchsDataSource.sort = this.sort2;
+    this.branchsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+    };
   }
 
   reloadBankTable() {
@@ -227,10 +239,6 @@ export class BanksComponent implements OnInit {
     });
   }
 
-
-  replaceFileName(fileName) {
-    return fileName ? fileName.replace('http://demo20180914093247.azurewebsites.net/Flags/', '') : '';
-  }
 
   export(type, data) {
     switch (type) {
