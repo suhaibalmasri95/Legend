@@ -5,7 +5,8 @@ import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Currency } from '../models/Currency';
+import { Currency } from '../entities/models/Currency';
+
 
 @Injectable()
 export class CurrencyResolver implements Resolve<Currency[]> {

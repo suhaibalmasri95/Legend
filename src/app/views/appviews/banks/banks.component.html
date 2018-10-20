@@ -36,28 +36,28 @@
             <form #form="ngForm" (ngSubmit)="saveBank(form)" class="{{submit?'submited':''}}">
               <div class="row">
                 <div class="form-group col-md-3">
-                  <label for="Code">Code</label>
-                  <input name="Code" placeholder="Code" type="text" class="form-control" [(ngModel)]="bankForm.Code">
+                  <label for="CODE">Code</label>
+                  <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="bankForm.CODE">
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="Name">Name <span class="help-block">*</span></label>
-                  <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="bankForm.Name"
+                  <label for="NAME">Name <span class="help-block">*</span></label>
+                  <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="bankForm.NAME"
                     required>
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="Name2">Name 2</label>
-                  <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="bankForm.Name2">
+                  <label for="NAME2">Name 2</label>
+                  <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="bankForm.NAME2">
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="Phone_Code">Phone Code</label>
-                  <input name="Phone_Code" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="bankForm.Phone_Code">
+                  <label for="PHONE_CODE">Phone Code</label>
+                  <input name="PHONE_CODE" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="bankForm.PHONE_CODE">
                 </div>
               </div>
 
               <div class="row">
                 <div class="form-group col-md-3">
-                  <label for="Phone">Phone</label>
-                  <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="bankForm.Phone">
+                  <label for="PHONE">Phone</label>
+                  <input name="PHONE" placeholder="Phone" type="text" class="form-control" [(ngModel)]="bankForm.PHONE">
                 </div>
                 <div class="col-md-7 text-right">
                   <br>
@@ -82,7 +82,7 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteBank(element.Id)" ngbTooltip="Delete">
+                      (confirm)="deleteBank(element.ID)" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
                     <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','bank')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
@@ -114,40 +114,40 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Id">
+                    <ng-container matColumnDef="ID">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.Id}}
+                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Code">
+                    <ng-container matColumnDef="CODE">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
                       <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.Code}} </td>
+                        {{element.CODE}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name">
+                    <ng-container matColumnDef="NAME">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name2">
+                    <ng-container matColumnDef="NAME2">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.Name2}} </td>
+                        {{element.NAME2}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Phone_Code">
+                    <ng-container matColumnDef="PHONE_CODE">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Code </th>
                       <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.Phone_Code}} </td>
+                        {{element.PHONE_CODE}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Phone">
+                    <ng-container matColumnDef="PHONE">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone </th>
                       <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.Phone}} </td>
+                        {{element.PHONE}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
@@ -160,7 +160,7 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="bankTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: bankTableColumns;" (click)="updateBank(row)" class=" mat-row {{bankForm.Id===row.Id?'active':'not-active'}}"></tr>
+                    <tr mat-row *matRowDef="let row; columns: bankTableColumns;" (click)="updateBank(row)" class=" mat-row {{bankForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                   </table>
                   <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
@@ -176,7 +176,7 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteBank(element.Id)" ngbTooltip="Delete">
+                      (confirm)="deleteBank(element.ID)" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
                     <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','branch')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
@@ -199,8 +199,8 @@
                     <mat-select placeholder="Bank" (selectionChange)="reloadBranchTable(branchForm.ST_CNT_ID)"
                       [(ngModel)]="branchForm.ST_CNT_ID">
                       <mat-option [value]=""> All </mat-option>
-                      <mat-option *ngFor="let bank of banks" [value]="bank.Id">
-                        {{bank.Name}}
+                      <mat-option *ngFor="let bank of banks" [value]="bank.ID">
+                        {{bank.NAME}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -221,24 +221,24 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Id">
+                    <ng-container matColumnDef="ID">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name">
+                    <ng-container matColumnDef="NAME">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name2">
+                    <ng-container matColumnDef="NAME2">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Bank">
+                    <ng-container matColumnDef="BANK">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank</th>
-                      <td mat-cell *matCellDef="let element">{{getBankName(element.ST_CNT_ID)}}
+                      <td mat-cell *matCellDef="let element">{{getBankName(element.ST_BNK_ID)}}
                       </td>
                     </ng-container>
 
@@ -252,7 +252,7 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="branchTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: branchTableColumns;" (click)="updateBranch(row)" class=" mat-row {{branchForm.Id===row.Id?'active':'not-active'}}"></tr>
+                    <tr mat-row *matRowDef="let row; columns: branchTableColumns;" (click)="updateBranch(row)" class=" mat-row {{branchForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                   </table>
                   <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
@@ -270,24 +270,24 @@
                     <form #form="ngForm" (ngSubmit)="saveBranch(form)" class="{{submit2?'submited':''}}">
                       <div class="row">
                         <div class="form-group col-md-3">
-                          <label for="Code">Code</label>
-                          <input name="Code" placeholder="Code" type="text" class="form-control" [(ngModel)]="branchForm.Code">
+                          <label for="CODE">Code</label>
+                          <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="branchForm.CODE">
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name">Name <span class="help-block">*</span></label>
-                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="branchForm.Name"
+                          <label for="NAME">Name <span class="help-block">*</span></label>
+                          <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="branchForm.NAME"
                             required>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name2">Name 2</label>
-                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="branchForm.Name2">
+                          <label for="NAME2">Name 2</label>
+                          <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="branchForm.NAME2">
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="Bank">Bank <span class="help-block">*</span></label>
-                          <select name="Bank" class="form-control" [(ngModel)]="branchForm.BankId" required>
+                          <label for="ST_BNK_ID">Bank <span class="help-block">*</span></label>
+                          <select name="ST_BNK_ID" class="form-control" [(ngModel)]="branchForm.ST_BNK_ID" required>
                             <option [ngValue]="">Select</option>
-                            <option *ngFor="let bank of banks" [ngValue]="bank.Id">{{bank.Name}}</option>
+                            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{bank.NAME}}</option>
                           </select>
                         </div>
 
@@ -296,31 +296,31 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="country">Country <span class="help-block">*</span></label>
+                          <label for="ST_CNT_ID">Country <span class="help-block">*</span></label>
                           <select name="ST_CNT_ID" placeholder="Country" class="form-control" [(ngModel)]="branchForm.ST_CNT_ID"
                             (change)="loadCities()" required>
                             <option ngValue="">Select</option>
-                            <option *ngFor="let country of countries" [ngValue]="country.Id">{{country.Name}}</option>
+                            <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.NAME}}</option>
                           </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="ST_CTY_ID">City <span class="help-block">*</span></label>
-                          <select name="ST_CTY_ID" placeholder="City" class="form-control" [(ngModel)]="branchForm.ST_CTY_ID"
+                          <label for="ST_CITY_ID">City <span class="help-block">*</span></label>
+                          <select name="ST_CITY_ID" placeholder="City" class="form-control" [(ngModel)]="branchForm.ST_CITY_ID"
                             [disabled]="!cities ||cities.length===0" required>
                             <option ngValue="">Select</option>
-                            <option *ngFor="let city of cities" [ngValue]="city.Id">{{city.Name}}</option>
+                            <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.NAME}}</option>
                           </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="Phone_Code">Phone Code</label>
-                          <input name="Phone_Code" placeholder="Phone Code" type="text" class="form-control"
-                            [(ngModel)]="branchForm.Phone_Code">
+                          <label for="PHONE_CODE">Phone Code</label>
+                          <input name="PHONE_CODE" placeholder="Phone Code" type="text" class="form-control"
+                            [(ngModel)]="branchForm.PHONE_CODE">
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Phone">Phone</label>
-                          <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="branchForm.Phone">
+                          <label for="PHONE">Phone</label>
+                          <input name="PHONE" placeholder="Phone" type="text" class="form-control" [(ngModel)]="branchForm.PHONE">
                         </div>
                         <div class="col-md-12 text-right">
                           <br>

@@ -5,6 +5,6 @@
 
 export const environment = {
   production: null,
-  localUrl: 'https://localhost:44338/api/',
-  azureUrl: 'http://demo20180914093247.azurewebsites.net/api/'
+  localUrl: 'https://localhost:44305/api/',
+  azureUrl: 'https://localhost:44305/api/'
 };

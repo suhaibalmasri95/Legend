@@ -19,7 +19,8 @@ import { AppviewsModule } from './views/appviews/appviews.module';
 import { LayoutsModule } from './components/common/layouts/layouts.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LockUpResolver } from './_resolvers/lockup-reolver.resolver';
-import { BranchResolver } from './_resolvers/branch.resolver';
+import { BankBranchResolver } from './_resolvers/BankBranch.resolver';
+
 
 
 @NgModule({
@@ -44,7 +45,7 @@ import { BranchResolver } from './_resolvers/branch.resolver';
     AreaResolver,
     CurrencyResolver,
     BankResolver,
-    BranchResolver
+    BankBranchResolver
   ],
   bootstrap: [AppComponent]
 })

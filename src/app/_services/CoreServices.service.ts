@@ -1,19 +1,24 @@
-import { Branch } from './../models/branch';
-import { Bank } from './../models/bank';
-import { Country } from './../models/country';
+
 import { Observable } from 'rxjs';
-import { Currency } from './../models/Currency';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { City } from '../models/City';
-import { Area } from '../models/Area';
-import { LockUp } from '../models/LockUp';
+import { Country } from '../entities/models/country';
+import { City } from '../entities/models/City';
+import { Area } from '../entities/models/Area';
+import { Currency } from '../entities/models/Currency';
+import { LockUp } from '../entities/models/LockUp';
+import { Bank } from '../entities/models/bank';
+import { BankBranches } from '../entities/models/BankBranches';
+
 @Injectable({
   providedIn: 'root'
 })
 export class CoreService {
-  url: string = environment.azureUrl + 'core';
+  QueryUrl: string = environment.azureUrl + 'Query';
+  CreateUrl: string = environment.azureUrl + 'Create';
+  UpdateUrl: string = environment.azureUrl + 'Update';
+  DeleteUrl: string = environment.azureUrl + 'Delete';
   utilitiesURl: string = environment.azureUrl + 'Utilites';
   countries: Country[];
   cityForm: City;
@@ -27,7 +32,7 @@ export class CoreService {
 
 
   loadCountries(): Observable<Country[]> {
-    return this.http.get<Country[]>(this.url + '/LoadCountries');
+    return this.http.get<Country[]>(this.QueryUrl + '/LoadCountries ');
   }
 
   loadCities(countryId: number = null, cityId: number = null, langId: number = null): Observable<City[]> {
@@ -44,7 +49,7 @@ export class CoreService {
     if (langId != null) {
       queryString += langId;
     }
-    return this.http.get<City[]>(this.url + '/LoadCities' + queryString);
+    return this.http.get<City[]>(this.QueryUrl + '/LoadCities' + queryString);
   }
 
   loadAreas(areaId: number = null, cityId: number = null, countryId: number = null, langId: number = null): Observable<Area[]> {
@@ -66,15 +71,15 @@ export class CoreService {
       queryString += langId;
     }
     // tslint:disable-next-line:max-line-length
-    return this.http.get<Area[]>(this.url + '/LoadArea' + queryString);
+    return this.http.get<Area[]>(this.QueryUrl + '/LoadAreas' + queryString);
   }
 
   loadCurrencies(): Observable<Currency[]> {
-    return this.http.get<Currency[]>(this.url + '/LoadCurrencies');
+    return this.http.get<Currency[]>(this.QueryUrl + '/LoadCurrencies');
   }
 
   LoadLockUpsByMajorCode(majorCode: number = 1): Observable<LockUp[]> {
-    return this.http.get<LockUp[]>(this.url + '/LoadLockUpsByMajorCode?ID=' + majorCode);
+    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUpStatus?MajorCode=' + majorCode);
   }
 
   ExportToPdf(fileName: string, Type: string) {
@@ -88,48 +93,23 @@ export class CoreService {
 
   }
 
-  loadBanks(): Observable<Country[]> {
-    return this.http.get<Bank[]>(this.url + '/LoadCountries');
+  loadBanks(): Observable<Bank[]> {
+    return this.http.get<Bank[]>(this.QueryUrl + '/LoadBanks');
   }
 
-  loadBranchs(countryId: number = null, cityId: number = null, langId: number = null): Observable<Branch[]> {
-    let queryString = '?cityId=';
-
-    if (cityId != null) {
-      queryString += cityId;
-    }
-    queryString += '&countryId=';
-    if (countryId != null) {
-      queryString += countryId;
-    }
-    queryString += '&langId=';
-    if (langId != null) {
-      queryString += langId;
-    }
-    return this.http.get<Branch[]>(this.url + '/LoadCities' + queryString);
+  loadBranchs(countryId: number = null, cityId: number = null, langId: number = null): Observable<BankBranches[]> {
+    return this.http.get<BankBranches[]>(this.QueryUrl + '/LoadBankBranches');
   }
 
 
-  loadMajorCodes(): Observable<Country[]> {
-    return this.http.get<Bank[]>(this.url + '/LoadCountries');
+  loadMajorCodes(): Observable<LockUp[]> {
+    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUps');
   }
 
-  loadMinorCodes(countryId: number = null, cityId: number = null, langId: number = null): Observable<Branch[]> {
-    let queryString = '?cityId=';
-
-    if (cityId != null) {
-      queryString += cityId;
-    }
-    queryString += '&countryId=';
-    if (countryId != null) {
-      queryString += countryId;
-    }
-    queryString += '&langId=';
-    if (langId != null) {
-      queryString += langId;
-    }
-    return this.http.get<Branch[]>(this.url + '/LoadCities' + queryString);
+  loadMinorCodes(countryId: number = null, cityId: number = null, langId: number = null): Observable<LockUp[]> {
+    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUps');
   }
+
 
 }
 

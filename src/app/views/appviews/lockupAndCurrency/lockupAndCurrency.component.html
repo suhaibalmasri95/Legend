@@ -42,32 +42,32 @@
                   <form #form="ngForm" (ngSubmit)="saveMajorCode(form)" class="{{submit?'submited':''}}">
                     <div class="row">
                       <div class="form-group col-md-3">
-                        <label for="majorCode(">Major Code</label>
-                        <input name="majorCode" placeholder="Major Code" type="text" class="form-control" [(ngModel)]="majorCodeForm.majorCode"
+                        <label for="MAJOR_CODE(">Major Code</label>
+                        <input name="MAJOR_CODE" placeholder="Major Code" type="text" class="form-control" [(ngModel)]="majorCodeForm.MAJOR_CODE"
                           required>
                       </div>
                       <div class="form-group col-md-3">
-                        <label for="Name">Name <span class="help-block">*</span></label>
-                        <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="majorCodeForm.Name"
+                        <label for="NAME">Name <span class="help-block">*</span></label>
+                        <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="majorCodeForm.NAME"
                           required>
                       </div>
                       <div class="form-group col-md-3">
-                        <label for="Name2">Name 2</label>
-                        <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="majorCodeForm.Name2">
+                        <label for="NAME2">Name 2</label>
+                        <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="majorCodeForm.NAME2">
                       </div>
                       <div class="form-group col-md-3">
-                        <label for="Refernce_No">Reference No</label>
-                        <input name="Refernce_No" placeholder="Reference No" type="text" class="form-control"
-                          [(ngModel)]="majorCodeForm.Refernce_No">
+                        <label for="REF_NO">Reference No</label>
+                        <input name="REF_NO" placeholder="Reference No" type="text" class="form-control"
+                          [(ngModel)]="majorCodeForm.REF_NO">
                       </div>
                     </div>
 
                     <div class="row">
                       <div class="form-group col-md-3">
-                        <label for="parentCode">Parent Code<span class="help-block">*</span></label>
-                        <select name="parentCode" placeholder="Status" class="form-control" [(ngModel)]="majorCodeForm.parentCode">
+                        <label for="ST_LOCKUP_ID">Parent Code<span class="help-block">*</span></label>
+                        <select name="ST_LOCKUP_ID"  class="form-control" [(ngModel)]="majorCodeForm.ST_LOCKUP_ID">
                           <option [ngValue]="">Select</option>
-                          <option *ngFor="let parentCode of LockUps" [ngValue]="parentCode.Major_Code">{{parentCode.Name}}</option>
+                          <option *ngFor="let parentCode of LockUps" [ngValue]="parentCode.ID">{{parentCode.NAME}}</option>
                         </select>
                       </div>
 
@@ -93,7 +93,7 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteMajorCode(element.Id)" ngbTooltip="Delete">
+                      (confirm)="deleteMajorCode(element.ID)" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
                     <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','majorCode')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
@@ -125,28 +125,28 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Id">
+                    <ng-container matColumnDef="ID">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.Id}}
+                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Code">
+                    <ng-container matColumnDef="MAJOR_CODE">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
                       <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.Code}} </td>
+                        {{element.MAJOR_CODE}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name">
+                    <ng-container matColumnDef="NAME">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name2">
+                    <ng-container matColumnDef="NAME2">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.Name2}} </td>
+                        {{element.NAME2}} </td>
                     </ng-container>
 
 
@@ -156,13 +156,13 @@
                       <td style="width: 10%" mat-cell *matCellDef="let element">
                         <i (click)="updateMajorCode(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                         <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteMajorCode(element.Id)" ngbTooltip="Delete"></i>
+                          placement="left" (confirm)="deleteMajorCode(element.ID)" ngbTooltip="Delete"></i>
                       </td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="majorCodeTableColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: majorCodeTableColumns;" (click)="updateMajorCode(row)"
-                      class=" mat-row {{majorCodeForm.Code===row.Code?'active':'not-active'}}"></tr>
+                      class=" mat-row {{majorCodeForm.MAJOR_CODE===row.MAJOR_CODE?'active':'not-active'}}"></tr>
 
                   </table>
                   <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
@@ -184,28 +184,28 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="MajorCode">Major Code <span class="help-block">*</span></label>
-                          <select name="MajorCode" class="form-control" [(ngModel)]="minorCodeForm.majorCodeId"
+                          <label for="MAJOR_CODE">Major Code <span class="help-block">*</span></label>
+                          <select name="MAJOR_CODE" class="form-control" [(ngModel)]="minorCodeForm.MAJOR_CODE"
                             required>
                             <option [ngValue]="">Select</option>
-                            <option *ngFor="let majorCode of majorCodes" [ngValue]="majorCode.Id">{{majorCode.Name}}</option>
+                            <option *ngFor="let majorCode of majorCodes" [ngValue]="majorCode.ID">{{majorCode.NAME}}</option>
                           </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="minorCode"> Minor Code</label>
-                          <input name="minorCode" placeholder=" Minor Code" type="number" class="form-control"
-                            [(ngModel)]="minorCodeForm.minorCode">
+                          <label for="MINOR_CODE"> Minor Code</label>
+                          <input name="MINOR_CODE" placeholder=" Minor Code" type="number" class="form-control"
+                            [(ngModel)]="minorCodeForm.MINOR_CODE">
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="Name">Name <span class="help-block">*</span></label>
-                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="minorCodeForm.Name"
+                          <label for="NAME">Name <span class="help-block">*</span></label>
+                          <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="minorCodeForm.NAME"
                             required>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name2">Name 2</label>
-                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="minorCodeForm.Name2">
+                          <label for="NAME2">Name 2</label>
+                          <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="minorCodeForm.NAME2">
                         </div>
 
 
@@ -214,17 +214,17 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="Refernce_No">Reference No</label>
-                          <input name="Refernce_No" placeholder="Reference No" type="text" class="form-control"
-                            [(ngModel)]="majorCodeForm.Refernce_No">
+                          <label for="REF_NO">Reference No</label>
+                          <input name="REF_NO" placeholder="Reference No" type="text" class="form-control"
+                            [(ngModel)]="majorCodeForm.REF_NO">
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="ParentCode">Parent Code<span class="help-block">*</span></label>
-                          <select name="ParentCode" class="form-control" [(ngModel)]="minorCodeForm.parentCodeId"
+                          <label for="ST_LOCKUP_ID">Parent Code<span class="help-block">*</span></label>
+                          <select name="ST_LOCKUP_ID" class="form-control" [(ngModel)]="minorCodeForm.ST_LOCKUP_ID"
                             required>
                             <option [ngValue]="">Select</option>
-                            <option *ngFor="let majorCode of majorCodes" [ngValue]="majorCode.Id">{{majorCode.Name}}</option>
+                            <option *ngFor="let majorCode of majorCodes" [ngValue]="majorCode.ID">{{majorCode.NAME}}</option>
                           </select>
                         </div>
 
@@ -248,7 +248,7 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteMajorCode(element.Id)" ngbTooltip="Delete">
+                      (confirm)="deleteMajorCode(element.ID)" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
                     <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','minorCode')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
@@ -268,11 +268,11 @@
                 </div>
                 <div class="col-md-3">
                   <mat-form-field>
-                    <mat-select placeholder="MajorCode" (selectionChange)="reloadMinorCodeTable(minorCodeForm.majorCodeId)"
-                      [(ngModel)]="minorCodeForm.majorCodeId">
+                    <mat-select placeholder="MajorCode" (selectionChange)="reloadMinorCodeTable(minorCodeForm.MINOR_CODE)"
+                      [(ngModel)]="minorCodeForm.MINOR_CODE">
                       <mat-option [value]=""> All </mat-option>
-                      <mat-option *ngFor="let majorCode of majorCodes" [value]="majorCode.Id">
-                        {{majorCode.Name}}
+                      <mat-option *ngFor="let majorCode of majorCodes" [value]="majorCode.ID">
+                        {{majorCode.NAME}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -293,19 +293,23 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Id">
+                    <ng-container matColumnDef="ID">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                     </ng-container>
-
-                    <ng-container matColumnDef="Name">
+                    <ng-container matColumnDef="MINOR_CODE">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                      <td style="width: 10%" mat-cell *matCellDef="let element">
+                        {{element.MINOR_CODE}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="NAME">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name2">
+                    <ng-container matColumnDef="NAME2">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
                     </ng-container>
 
 
@@ -315,13 +319,13 @@
                       <td mat-cell *matCellDef="let element">
                         <i (click)="updateMinorCode(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                         <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteMinorCode(element.Id)" ngbTooltip="Delete"></i>
+                          placement="left" (confirm)="deleteMinorCode(element.ID)" ngbTooltip="Delete"></i>
                       </td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="minorCodeTableColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: minorCodeTableColumns;" (click)="updateMinorCode(row)"
-                      class=" mat-row {{minorCodeForm.Id===row.Id?'active':'not-active'}}"></tr>
+                      class=" mat-row {{minorCodeForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                   </table>
                   <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
@@ -347,23 +351,23 @@
                     <form #form="ngForm" (ngSubmit)="saveCurrency(form)" class="{{submit2?'submited':''}}">
                       <div class="row">
                         <div class="form-group col-md-3">
-                          <label for="Code">Code</label>
-                          <input name="Code" placeholder="Code" type="text" class="form-control" [(ngModel)]="currencyForm.Code">
+                          <label for="CODE">Code</label>
+                          <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="currencyForm.CODE">
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name">Name <span class="help-block">*</span></label>
-                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="currencyForm.Name"
+                          <label for="NAME">Name <span class="help-block">*</span></label>
+                          <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="currencyForm.NAME"
                             required>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name2">Name 2</label>
-                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="currencyForm.Name2">
+                          <label for="NAME2">Name 2</label>
+                          <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="currencyForm.NAME2">
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="decimalPlaces">Decimal Places <span class="help-block">*</span></label>
-                          <input name="decimalPlaces" placeholder="Decimal Places" type="number" class="form-control"
-                            [(ngModel)]="currencyForm.decimalPlaces" required>
+                          <label for="DECIMAL_PLACES">Decimal Places <span class="help-block">*</span></label>
+                          <input name="DECIMAL_PLACES" placeholder="Decimal Places" type="number" class="form-control"
+                            [(ngModel)]="currencyForm.DECIMAL_PLACES" required>
                         </div>
 
                       </div>
@@ -371,28 +375,28 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="sign">Sign <span class="help-block">*</span></label>
-                          <input name="sign" placeholder="Sign" type="text" class="form-control" [(ngModel)]="currencyForm.sign"
+                          <label for="SIGN">Sign <span class="help-block">*</span></label>
+                          <input name="SIGN" placeholder="Sign" type="text" class="form-control" [(ngModel)]="currencyForm.SIGN"
                             required>
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="Loc_Status">Status <span class="help-block">*</span></label>
-                          <select name="Loc_Status" placeholder="Status" class="form-control" [(ngModel)]="currencyForm.Loc_Status"
+                          <label for="STATUS">Status <span class="help-block">*</span></label>
+                          <select name="STATUS" placeholder="Status" class="form-control" [(ngModel)]="currencyForm.STATUS"
                             required>
                             <option [ngValue]="">Select</option>
-                            <option *ngFor="let status of LockUps" [ngValue]="status.Major_Code">{{status.Name}}</option>
+                            <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.NAME}}</option>
 
                           </select>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="fraction">Fraction <span class="help-block">*</span></label>
-                          <input name="fraction" placeholder="Fraction" type="text" class="form-control" [(ngModel)]="currencyForm.fraction"
+                          <label for="FRACT_NAME">Fraction <span class="help-block">*</span></label>
+                          <input name="FRACT_NAME" placeholder="Fraction" type="text" class="form-control" [(ngModel)]="currencyForm.FRACT_NAME"
                             required>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="fraction2">Fraction 2<span class="help-block">*</span></label>
-                          <input name="fraction2" placeholder="Fraction 2" type="text" class="form-control" [(ngModel)]="currencyForm.fraction2"
+                          <label for="FRACT_NAME2">Fraction 2<span class="help-block">*</span></label>
+                          <input name="FRACT_NAME2" placeholder="Fraction 2" type="text" class="form-control" [(ngModel)]="currencyForm.FRACT_NAME2"
                             required>
                         </div>
                         <div class="col-md-12 text-right">
@@ -417,7 +421,7 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteMajorCode(element.Id)" ngbTooltip="Delete">
+                      (confirm)="deleteMajorCode(element.CODE)" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
                     <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','currency')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
@@ -452,19 +456,19 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Id">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                    <ng-container matColumnDef="CODE">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>CODE</th>
+                      <td mat-cell *matCellDef="let element"> {{element.CODE}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name">
+                    <ng-container matColumnDef="NAME">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Name2">
+                    <ng-container matColumnDef="NAME2">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
                     </ng-container>
 
 
@@ -474,13 +478,13 @@
                       <td mat-cell *matCellDef="let element">
                         <i (click)="updateCurrency(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                         <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteCurrency(element.Code)" ngbTooltip="Delete"></i>
+                          placement="left" (confirm)="deleteCurrency(element.CODE)" ngbTooltip="Delete"></i>
                       </td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="currencyTableColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: currencyTableColumns;" (click)="updateCurrency(row)"
-                      class=" mat-row {{currencyForm.Code===row.Code?'active':'not-active'}}"></tr>
+                      class=" mat-row {{currencyForm.CODE===row.CODE?'active':'not-active'}}"></tr>
 
                   </table>
                   <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>

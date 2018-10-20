@@ -36,28 +36,28 @@
                         <form #form="ngForm" (ngSubmit)="saveCountry(form)" class="{{submit?'submited':''}}">
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="Name">Name <span class="help-block">*</span></label>
-                                    <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="countryForm.Name"
+                                    <label for="NAME">Name <span class="help-block">*</span></label>
+                                    <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="countryForm.NAME"
                                         required>
                                     <!-- <span class="help-block" *ngIf="form.controls.Name&&form.controls.Name.invalid &&( form.controls.Name.touched|| form.controls.Name.dirty||form.submitted)">required</span> -->
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="Name2">Name 2</label>
-                                    <input name="Name2" placeholder="Name 2" type="text" class="form-control"
-                                        [(ngModel)]="countryForm.Name2">
+                                    <label for="NAME2">Name 2</label>
+                                    <input name="NAME2" placeholder="Name 2" type="text" class="form-control"
+                                        [(ngModel)]="countryForm.NAME2">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="Nationality">Nationality</label>
-                                    <input name="Nationality" placeholder="Nationality" type="text" class="form-control"
-                                        [(ngModel)]="countryForm.Nationality">
+                                    <label for="NATIONALITY">Nationality</label>
+                                    <input name="NATIONALITY" placeholder="Nationality" type="text" class="form-control"
+                                        [(ngModel)]="countryForm.NATIONALITY">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="ST_CUR_COD">Currency Code <span class="help-block">*</span></label>
                                     <!-- <input name="ST_CUR_COD" type="text" class="form-control" [(ngModel)]="countryForm.ST_CUR_COD"> -->
                                     <select name="ST_CUR_COD" placeholder="Currency Code" class="form-control"
-                                        [(ngModel)]="countryForm.ST_CUR_COD" required>
+                                        [(ngModel)]="countryForm.ST_CUR_CODE" required>
                                         <option [ngValue]="">Select</option>
-                                        <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+                                        <option *ngFor="let currency of currencies" [ngValue]="currency.CODE">{{currency.NAME}}</option>
                                     </select>
                                     <!-- <span class="help-block" *ngIf="form.controls.ST_CUR_COD&&form.controls.ST_CUR_COD.invalid &&( form.controls.ST_CUR_COD.touched|| form.controls.ST_CUR_COD.dirty||form.submitted)">required</span> -->
 
@@ -66,24 +66,24 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="Refernce_No">Reference No</label>
-                                    <input name="Refernce_No" placeholder="Reference No" type="text" class="form-control"
-                                        [(ngModel)]="countryForm.Refernce_No">
+                                    <label for="REFERNCE_NO">Reference No</label>
+                                    <input name="REFERNCE_NO" placeholder="Reference No" type="text" class="form-control"
+                                        [(ngModel)]="countryForm.REFERNCE_NO">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="Loc_Status">Status <span class="help-block">*</span></label>
-                                    <select name="Loc_Status" placeholder="Status" class="form-control" [(ngModel)]="countryForm.Loc_Status"
+                                    <label for="LOC_STATUS">Status <span class="help-block">*</span></label>
+                                    <select name="LOC_STATUS" placeholder="Status" class="form-control" [(ngModel)]="countryForm.LOC_STATUS"
                                         required>
                                         <option [ngValue]="">Select</option>
 
-                                        <option *ngFor="let status of LockUps" [ngValue]="status.Id">{{status.Name}}</option>
+                                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.NAME}}</option>
                                     </select>
                                     <!-- <span class="help-block" *ngIf="form.controls.Loc_Status&&form.controls.Loc_Status.invalid &&( form.controls.Loc_Status.touched|| form.controls.Loc_Status.dirty||form.submitted)">required</span> -->
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="Phone_Code">Phone Code</label>
-                                    <input name="Phone_Code" placeholder="Phone Code" type="text" class="form-control"
-                                        [(ngModel)]="countryForm.Phone_Code">
+                                    <label for="PHONE_CODE">Phone Code</label>
+                                    <input name="PHONE_CODE" placeholder="Phone Code" type="text" class="form-control"
+                                        [(ngModel)]="countryForm.PHONE_CODE">
                                 </div>
                             </div>
                             <div class="row">
@@ -95,19 +95,19 @@
 
                                             <span class="fileinput-filename">
                                                 <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                                                {{replaceFileName(countryForm.Flag)}}
+                                                {{replaceFileName(countryForm.FLAG)}}
                                             </span>
                                         </div>
 
-                                        <span class="input-group-addon btn btn-default btn-file" *ngIf="!countryForm.Flag">
-                                            <label for="Flag" class="custom-file-upload">
+                                        <span class="input-group-addon btn btn-default btn-file" *ngIf="!countryForm.FLAG">
+                                            <label for="FLAG" class="custom-file-upload">
                                                 <i class="fa fa-cloud-upload"></i> Upload
                                             </label>
                                            
                                         </span> 
-                                        <input id="Flag" name="Flag" type="file" [(ngModel)]="countryForm.Flag"
+                                        <input id="FLAG" name="FLAG" type="file" [(ngModel)]="countryForm.FLAG"
                                                 ng2FileSelect [uploader]="uploader">
-                                        <a *ngIf="countryForm.Flag" (click)="countryForm.Flag=null" class="input-group-addon btn btn-default fileinput-exists"
+                                        <a *ngIf="countryForm.FLAG" (click)="countryForm.FLAG=null" class="input-group-addon btn btn-default fileinput-exists"
                                             data-dismiss="fileinput">Remove</a>
                                     </div>
 
@@ -136,7 +136,7 @@
                                     <div class="dt-buttons btn-group">
                                         <button class="btn btn-default" [disabled]="!selection.hasValue()"
                                             mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                                            placement="bottom" (confirm)="deleteCountry(element.Id)" ngbTooltip="Delete">
+                                            placement="bottom" (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete">
                                             <img src="assets/images/Trash-can.png"></button>
                                         <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"
                                             placement="bottom" ngbTooltip="Export to CSV"><span>
@@ -169,52 +169,52 @@
                                             </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Id">
+                                        <ng-container matColumnDef="ID">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                                            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.Id}}
+                                            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
                                             </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Name">
+                                        <ng-container matColumnDef="NAME">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                                            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                                            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
                                             </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Name2">
+                                        <ng-container matColumnDef="NAME2">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                                             <td style="width: 15%" mat-cell *matCellDef="let element">
-                                                {{element.Name2}} </td>
+                                                {{element.NAME2}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Nationality">
+                                        <ng-container matColumnDef="NATIONALITY">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationality</th>
                                             <td style="width: 20%" mat-cell *matCellDef="let element">
-                                                {{element.Nationality}} </td>
+                                                {{element.NATIONALITY}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="ST_CUR_COD">
+                                        <ng-container matColumnDef="ST_CUR_CODE">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code </th>
                                             <td style="width: 10%" mat-cell *matCellDef="let element">
-                                                {{element.ST_CUR_COD}} </td>
+                                                {{element.ST_CUR_CODE}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Phone_Code">
+                                        <ng-container matColumnDef="PHONE_CODE">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
                                             <td style="width: 5%" mat-cell *matCellDef="let element">
-                                                {{element.Phone_Code}} </td>
+                                                {{element.PHONE_CODE}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Loc_Status">
+                                        <ng-container matColumnDef="LOC_STATUS">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
                                                 <td style="width: 10%" mat-cell *matCellDef="let element">
-                                                        {{getStatusName(element.Loc_Status)}} </td>
+                                                        {{getStatusName(element.LOC_STATUS)}} </td>
                                             </ng-container>
 
-                                        <ng-container matColumnDef="Flag">
+                                        <ng-container matColumnDef="FLAG">
                                             <th mat-header-cell *matHeaderCellDef>Flag </th>
                                             <td style="width: 5%" mat-cell *matCellDef="let element">
-                                                <img style="height: 30px;" src="{{element.Flag}}"></td>
+                                                <img style="height: 30px;" src="{{element.FLAG}}"></td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="actions">
@@ -224,13 +224,13 @@
                                                     ngbTooltip="Edit"></i>
                                                 <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
                                                     [popoverMessage]="'are you sure to delete?'" placement="left"
-                                                    (confirm)="deleteCountry(element.Id)" ngbTooltip="Delete"></i>
+                                                    (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete"></i>
                                             </td>
                                         </ng-container>
 
                                         <tr mat-header-row *matHeaderRowDef="countryTableColumns"></tr>
                                         <tr mat-row *matRowDef="let row; columns: countryTableColumns;" (click)="updateCountry(row)"
-                                            class=" mat-row {{countryForm.Id===row.Id?'active':'not-active'}}"></tr>
+                                            class=" mat-row {{countryForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                                     </table>
                                     <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]"
@@ -247,7 +247,7 @@
                                     <div class="dt-buttons btn-group">
                                         <button class="btn btn-default" [disabled]="!selection2.hasValue()"
                                             mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                                            placement="bottom" (confirm)="deleteCountry(element.Id)" ngbTooltip="Delete">
+                                            placement="bottom" (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete">
                                             <img src="assets/images/Trash-can.png"></button>
                                         <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','city')"
                                             placement="bottom" ngbTooltip="Export to CSV"><span>
@@ -272,8 +272,8 @@
                                         <mat-select placeholder="Country" (selectionChange)="reloadCityTable(cityForm.ST_CNT_ID)"
                                             [(ngModel)]="cityForm.ST_CNT_ID">
                                             <mat-option [value]=""> All </mat-option>
-                                            <mat-option *ngFor="let country of countries" [value]="country.Id">
-                                                {{country.Name}}
+                                            <mat-option *ngFor="let country of countries" [value]="country.ID">
+                                                {{country.NAME}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -294,19 +294,19 @@
                                             </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Id">
+                                        <ng-container matColumnDef="ID">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Name">
+                                        <ng-container matColumnDef="NAME">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="Name2">
+                                        <ng-container matColumnDef="NAME2">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="ST_CNT_ID">
@@ -322,13 +322,13 @@
                                                     ngbTooltip="Edit"></i>
                                                 <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
                                                     [popoverMessage]="'are you sure to delete?'" placement="left"
-                                                    (confirm)="deleteCity(element.Id)" ngbTooltip="Delete"></i>
+                                                    (confirm)="deleteCity(element.ID)" ngbTooltip="Delete"></i>
                                             </td>
                                         </ng-container>
 
                                         <tr mat-header-row *matHeaderRowDef="cityTableColumns"></tr>
                                         <tr mat-row *matRowDef="let row; columns: cityTableColumns;" (click)="updateCity(row)"
-                                            class=" mat-row {{cityForm.Id===row.Id?'active':'not-active'}}"></tr>
+                                            class=" mat-row {{cityForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                                     </table>
                                     <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]"
@@ -347,15 +347,15 @@
                                         <form #form="ngForm" (ngSubmit)="saveCity(form)" class="{{submit2?'submited':''}}">
                                             <div class="row">
                                                 <div class="form-group col-md-3">
-                                                    <label for="Name">Name <span class="help-block">*</span></label>
-                                                    <input name="Name" placeholder="Name" type="text" class="form-control"
-                                                        [(ngModel)]="cityForm.Name" required>
+                                                    <label for="NAME">Name <span class="help-block">*</span></label>
+                                                    <input name="NAME" placeholder="Name" type="text" class="form-control"
+                                                        [(ngModel)]="cityForm.NAME" required>
                                                     <!-- <span class="help-block" *ngIf="form.controls.Name&&form.controls.Name.invalid &&( form.controls.Name.touched|| form.controls.Name.dirty||form.submitted)">required</span> -->
                                                 </div>
                                                 <div class="form-group col-md-3">
-                                                    <label for="Name2">Name 2</label>
-                                                    <input name="Name2" placeholder="Name 2" type="text" class="form-control"
-                                                        [(ngModel)]="cityForm.Name2">
+                                                    <label for="NAME2">Name 2</label>
+                                                    <input name="NAME2" placeholder="Name 2" type="text" class="form-control"
+                                                        [(ngModel)]="cityForm.NAME2">
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="ST_CNT_ID">Country <span class="help-block">*</span></label>
@@ -363,24 +363,24 @@
                                                         required>
                                                         <option [ngValue]="">Select</option>
 
-                                                        <option *ngFor="let country of countries" [ngValue]="country.Id">{{country.Name}}</option>
+                                                        <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.NAME}}</option>
                                                     </select>
                                                     <!-- <span class="help-block" *ngIf="form.controls.ST_CNT_ID&&form.controls.ST_CNT_ID.invalid &&( form.controls.ST_CNT_ID.touched|| form.controls.ST_CNT_ID.dirty||form.submitted)">required</span> -->
                                                 </div>
                                                 <div class="form-group col-md-3">
-                                                    <label for="Refernce_No">Reference No</label>
-                                                    <input name="Refernce_No" placeholder="Reference No" type="text"
-                                                        class="form-control" [(ngModel)]="cityForm.Refernce_No">
+                                                    <label for="REFERNCE_NO">Reference No</label>
+                                                    <input name="REFERNCE_NO" placeholder="Reference No" type="text"
+                                                        class="form-control" [(ngModel)]="cityForm.REFERNCE_NO">
                                                 </div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="form-group col-md-3">
-                                                    <label for="Loc_Status">Status <span class="help-block">*</span></label>
-                                                    <select name="Loc_Status" placeholder="Status" class="form-control"
-                                                        [(ngModel)]="cityForm.Loc_Status" required>
+                                                    <label for="LOC_STATUS">Status <span class="help-block">*</span></label>
+                                                    <select name="LOC_STATUS" placeholder="Status" class="form-control"
+                                                        [(ngModel)]="cityForm.LOC_STATUS" required>
                                                         <option [ngValue]="">Select</option>
-                                                        <option *ngFor="let status of LockUps" [ngValue]="status.Major_Code">{{status.Name}}</option>
+                                                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.NAME}}</option>
 
                                                     </select>
                                                     <!-- <span class="help-block" *ngIf="form.controls.Loc_Status&&form.controls.Loc_Status.invalid &&( form.controls.Loc_Status.touched|| form.controls.Loc_Status.dirty||form.submitted)">required</span> -->
@@ -406,7 +406,7 @@
                                 <div class="dt-buttons btn-group">
                                     <button class="btn btn-default" [disabled]="!selection3.hasValue()"
                                         mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                                        placement="bottom" (confirm)="deleteCountry(element.Id)" ngbTooltip="Delete">
+                                        placement="bottom" (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete">
                                         <img src="assets/images/Trash-can.png"></button>
                                     <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','area')"
                                         placement="bottom" ngbTooltip="Export to CSV"><span>
@@ -428,8 +428,8 @@
                                         <mat-select placeholder="Country" (selectionChange)="reloadCityTable(areaForm.ST_CNT_ID)"
                                             [(ngModel)]="areaForm.ST_CNT_ID">
                                             <mat-option [value]=""> All </mat-option>
-                                            <mat-option *ngFor="let country of countries" [value]="country.Id">
-                                                {{country.Name}}
+                                            <mat-option *ngFor="let country of countries" [value]="country.ID">
+                                                {{country.NAME}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -439,8 +439,8 @@
                                         <mat-select placeholder="city" [disabled]="!cities ||cities.length===0"
                                             [(ngModel)]="areaForm.ST_CTY_ID" (selectionChange)="reloadAreaTable(areaForm.ST_CNT_ID,areaForm.ST_CTY_ID)">
                                             <mat-option [value]=""> All </mat-option>
-                                            <mat-option *ngFor="let city of cities" [value]="city.Id">
-                                                {{city.Name}}
+                                            <mat-option *ngFor="let city of cities" [value]="city.ID">
+                                                {{city.NAME}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -459,17 +459,17 @@
                                                 </mat-checkbox>
                                             </td>
                                         </ng-container>
-                                        <ng-container matColumnDef="Id">
+                                        <ng-container matColumnDef="ID">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                                         </ng-container>
-                                        <ng-container matColumnDef="Name">
+                                        <ng-container matColumnDef="NAME">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
                                         </ng-container>
-                                        <ng-container matColumnDef="Name2">
+                                        <ng-container matColumnDef="NAME2">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
                                         </ng-container>
                                         <ng-container matColumnDef="ST_CNT_ID">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
@@ -489,12 +489,12 @@
                                                     ngbTooltip="Edit"></i>
                                                 <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
                                                     [popoverMessage]="'are you sure to delete?'" placement="left"
-                                                    (confirm)="deleteArea(element.Id)" ngbTooltip="Delete"></i>
+                                                    (confirm)="deleteArea(element.ID)" ngbTooltip="Delete"></i>
                                             </td>
                                         </ng-container>
                                         <tr mat-header-row *matHeaderRowDef="areaTableColumns"></tr>
                                         <tr mat-row *matRowDef="let row; columns: areaTableColumns;" (click)="updateArea(row)"
-                                            class=" mat-row {{areaForm.Id===row.Id?'active':'not-active'}}"></tr>
+                                            class=" mat-row {{areaForm.ID===row.ID?'active':'not-active'}}"></tr>
                                     </table>
 
                                     <mat-paginator #paginator3 [pageSizeOptions]="[10, 20, 30 ,40,50]"
@@ -514,23 +514,23 @@
                                         <form #form="ngForm" (ngSubmit)="saveArea(form)" class="{{submit3?'submited':''}}">
                                             <div class="row">
                                                 <div class="form-group col-md-3">
-                                                    <label for="Name">Name <span class="help-block">*</span></label>
-                                                    <input name="Name" placeholder="Name" type="text" class="form-control"
-                                                        [(ngModel)]="areaForm.Name" required>
+                                                    <label for="NAME">Name <span class="help-block">*</span></label>
+                                                    <input name="NAME" placeholder="Name" type="text" class="form-control"
+                                                        [(ngModel)]="areaForm.NAME" required>
                                                     <!-- <span class="help-block" *ngIf="form.controls.Name&&form.controls.Name.invalid &&( form.controls.Name.touched|| form.controls.Name.dirty||form.submitted)">required</span> -->
                                                 </div>
                                                 <div class="form-group col-md-3">
-                                                    <label for="Name2">Name 2</label>
-                                                    <input name="Name2" placeholder="Name2" type="text" class="form-control"
-                                                        [(ngModel)]="areaForm.Name2">
+                                                    <label for="NAME2">Name 2</label>
+                                                    <input name="NAME2" placeholder="Name2" type="text" class="form-control"
+                                                        [(ngModel)]="areaForm.NAME2">
                                                 </div>
                                                 <div class="form-group col-md-3">
-                                                    <label for="country">Country <span class="help-block">*</span></label>
+                                                    <label for="ST_CNT_ID">Country <span class="help-block">*</span></label>
                                                     <select name="ST_CNT_ID" placeholder="Country" class="form-control"
                                                         [(ngModel)]="areaForm.ST_CNT_ID" (change)="loadCities()"
                                                         required>
                                                         <option ngValue="">Select</option>
-                                                        <option *ngFor="let country of countries" [ngValue]="country.Id">{{country.Name}}</option>
+                                                        <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.NAME}}</option>
 
                                                     </select>
                                                     <!-- <span class="help-block" *ngIf="form.controls.ST_CNT_ID&&form.controls.ST_CNT_ID.invalid &&( form.controls.ST_CNT_ID.touched|| form.controls.ST_CNT_ID.dirty||form.submitted)">required</span> -->
@@ -541,7 +541,7 @@
                                                         [(ngModel)]="areaForm.ST_CTY_ID" [disabled]="!cities ||cities.length===0"
                                                         required>
                                                         <option ngValue="">Select</option>
-                                                        <option *ngFor="let city of cities" [ngValue]="city.Id">{{city.Name}}</option>
+                                                        <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.NAME}}</option>
 
                                                     </select>
                                                     <!-- <span class="help-block" *ngIf="form.controls.ST_CTY_ID&&form.controls.ST_CTY_ID.invalid &&( form.controls.ST_CTY_ID.touched|| form.controls.ST_CTY_ID.dirty||form.submitted)">required</span> -->
@@ -551,17 +551,17 @@
 
                                             <div class="row">
                                                 <div class="form-group col-md-3">
-                                                    <label for="Refernce_No">Reference No</label>
-                                                    <input name="Refernce_No" placeholder="Reference No" type="text"
-                                                        class="form-control" [(ngModel)]="areaForm.Refernce_No">
+                                                    <label for="REFERNCE_NO">Reference No</label>
+                                                    <input name="REFERNCE_NO" placeholder="Reference No" type="text"
+                                                        class="form-control" [(ngModel)]="areaForm.REFERNCE_NO">
                                                 </div>
                                                 <div class="form-group col-md-3">
-                                                    <label for="Loc_Status">Status <span class="help-block">*</span></label>
-                                                    <select name="Loc_Status" placeholder="Status" class="form-control"
-                                                        [(ngModel)]="areaForm.Loc_Status" required>
+                                                    <label for="LOC_STATUS">Status <span class="help-block">*</span></label>
+                                                    <select name="LOC_STATUS" placeholder="Status" class="form-control"
+                                                        [(ngModel)]="areaForm.LOC_STATUS" required>
                                                         <option [ngValue]="">Select</option>
 
-                                                        <option *ngFor="let status of LockUps" [ngValue]="status.Major_Code">{{status.Name}}</option>
+                                                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.NAME}}</option>
                                                     </select>
                                                     <!-- <span class="help-block" *ngIf="form.controls.Loc_Status&&form.controls.Loc_Status.invalid &&( form.controls.Loc_Status.touched|| form.controls.Loc_Status.dirty||form.submitted)">required</span> -->
                                                 </div>

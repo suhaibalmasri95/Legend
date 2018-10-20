@@ -1,16 +1,17 @@
-import { Area } from './../../models/Area';
-import { City } from './../../models/City';
-import { Currency } from './../../models/Currency';
-import { LockUp } from './../../models/LockUp';
+
 import { CoreService } from './../../_services/CoreServices.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
-import { Country } from '../../models/country';
 import { environment } from '../../../environments/environment';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Country } from '../../entities/models/country';
+import { City } from '../../entities/models/City';
+import { LockUp } from '../../entities/models/LockUp';
+import { Currency } from '../../entities/models/Currency';
+import { Area } from '../../entities/models/Area';
 
 @Component({
   selector: 'app-starter',
@@ -18,8 +19,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 
 export class StarterViewComponent implements OnInit {
-  url: string = environment.azureUrl + 'core';
-
   countryForm: Country;
   countries: Country[];
   cityForm: City;
@@ -31,15 +30,15 @@ export class StarterViewComponent implements OnInit {
   submit: boolean;
   submit2: boolean;
   submit3: boolean;
-  countryTableColumns = ['select', 'Id', 'Name', 'Name2', 'Nationality', 'ST_CUR_COD', 'Phone_Code', 'Loc_Status', 'Flag', 'actions'];
+  countryTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'NATIONALITY', 'ST_CUR_CODE', 'PHONE_CODE', 'LOC_STATUS', 'FLAG', 'actions'];
   countriesDataSource: MatTableDataSource<Country>;
 
-  cityTableColumns = ['select', 'Id', 'Name', 'Name2', 'ST_CNT_ID', 'actions'];
+  cityTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ST_CNT_ID', 'actions'];
   citiesDataSource: MatTableDataSource<City>;
 
-  areaTableColumns = ['select', 'Id', 'Name', 'Name2', 'ST_CNT_ID', 'ST_CTY_ID', 'actions'];
+  areaTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ST_CNT_ID', 'ST_CTY_ID', 'actions'];
   areasDataSource: MatTableDataSource<Area>;
-
+  AddUpdateUrl: string;
   selection: SelectionModel<Country>;
   selection2: SelectionModel<City>;
   selection3: SelectionModel<Area>;
@@ -73,7 +72,7 @@ export class StarterViewComponent implements OnInit {
     this.submit = false;
     this.submit2 = false;
     this.submit3 = false;
-    this.uploader = new FileUploader({ url: this.url + '/AddCountryFlag' });
+    this.uploader = new FileUploader({ url: this.coreService.CreateUrl + '/AddCountryFlag' });
 
 
     this.route.data.subscribe(data => {
@@ -111,13 +110,13 @@ export class StarterViewComponent implements OnInit {
           break;
         case 1:
           this.extraForm = 'city';
-          this.reloadCityTable(this.countryForm.Id ? this.countryForm.Id : null);
-          this.cityForm.ST_CNT_ID = this.countryForm.Id;
+          this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
+          this.cityForm.ST_CNT_ID = this.countryForm.ID;
           break;
         case 2:
           this.extraForm = 'area';
-          this.reloadAreaTable(this.cityForm.Id ? this.cityForm.Id : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
-          this.areaForm.ST_CTY_ID = this.cityForm.Id;
+          this.reloadAreaTable(this.cityForm.ID ? this.cityForm.ID : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
+          this.areaForm.ST_CTY_ID = this.cityForm.ID;
           this.areaForm.ST_CNT_ID = this.cityForm.ST_CNT_ID;
           break;
       }
@@ -194,9 +193,14 @@ export class StarterViewComponent implements OnInit {
     this.uploader.uploadAll();
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
-        this.countryForm.Flag = response;
-        this.http.post(this.url + (this.countryForm.selected ? '/UpdateCountry' : '/InsertCountry'), this.countryForm).subscribe(res => {
-          this.uploader = new FileUploader({ url: this.url + '/AddCountryFlag' });
+        this.countryForm.FLAG = response;
+        if (this.countryForm.selected) {
+        this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCountry';
+      } else {
+        this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCountry'; }
+
+        this.http.post(this.AddUpdateUrl, this.countryForm).subscribe(res => {
+          this.uploader = new FileUploader({ url: this.coreService.CreateUrl + '/AddCountryFlag' });
 
           this.reloadCountryTable();
           this.countryForm = new Country;
@@ -217,11 +221,16 @@ export class StarterViewComponent implements OnInit {
     }
 
     this.countryForm = this.countryForm.selected ? this.countryForm : Object.assign({}, form.value);
-    this.countryForm.Loc_Status = Number(this.countryForm.Loc_Status);
+    this.countryForm.LOC_STATUS = Number(this.countryForm.LOC_STATUS);
     if (this.uploader.queue.length > 0) {
       this.UploadFlag(form);
     } else {
-      this.http.post(this.url + (this.countryForm.selected ? '/UpdateCountry' : '/InsertCountry'), this.countryForm).subscribe(res => {
+      if (this.countryForm.selected) {
+        this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCountry';
+      } else {
+        this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCountry'; }
+
+      this.http.post(this.AddUpdateUrl, this.countryForm).subscribe(res => {
         this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
         this.reloadCountryTable();
         this.countryForm = new Country;
@@ -232,7 +241,7 @@ export class StarterViewComponent implements OnInit {
   }
 
   deleteCountry(id) {
-    this.http.delete(this.url + '/DeleteCountry?countryId=' + id).subscribe(res => {
+    this.http.delete(this.coreService.DeleteUrl + '/DeleteCountry?countryID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCountryTable();
     });
@@ -241,15 +250,15 @@ export class StarterViewComponent implements OnInit {
   updateCountry(country: Country) {
     window.scroll(0, 0);
     this.countryForm = new Country;
-    this.countryForm.Id = country.Id;
-    this.countryForm.Name = country.Name;
-    this.countryForm.Name2 = country.Name2;
-    this.countryForm.Nationality = country.Nationality;
-    this.countryForm.ST_CUR_COD = country.ST_CUR_COD;
-    this.countryForm.Refernce_No = country.Refernce_No;
-    this.countryForm.Loc_Status = country.Loc_Status;
-    this.countryForm.Phone_Code = country.Phone_Code;
-    this.countryForm.Flag = country.Flag;
+    this.countryForm.ID = country.ID;
+    this.countryForm.NAME = country.NAME;
+    this.countryForm.NAME2 = country.NAME2;
+    this.countryForm.NATIONALITY = country.NATIONALITY;
+    this.countryForm.ST_CUR_CODE = country.ST_CUR_CODE;
+    this.countryForm.REFERNCE_NO = country.REFERNCE_NO;
+    this.countryForm.LOC_STATUS = country.LOC_STATUS;
+    this.countryForm.PHONE_CODE = country.PHONE_CODE;
+    this.countryForm.FLAG = country.FLAG;
     this.countryForm.selected = true;
   }
 
@@ -259,10 +268,14 @@ export class StarterViewComponent implements OnInit {
   saveCity(form) {
     if (form.invalid) { return; }
     this.cityForm = this.cityForm.selected ? this.cityForm : Object.assign({}, form.value);
-    this.cityForm.Loc_Status = Number(this.cityForm.Loc_Status);
-    this.http.post(this.url + (this.cityForm.selected ? '/UpdateCity' : '/InsertCity'), this.cityForm).subscribe(res => {
+    this.cityForm.LOC_STATUS = Number(this.cityForm.LOC_STATUS);
+    if (this.cityForm.selected) {
+      this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCity';
+    } else {
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCity'; }
+    this.http.post( this.AddUpdateUrl , this.cityForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadCityTable(this.countryForm.Id ? this.countryForm.Id : null);
+      this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
       this.cityForm = new City;
       this.submit2 = false;
       form.resetForm();
@@ -271,21 +284,21 @@ export class StarterViewComponent implements OnInit {
   }
 
   deleteCity(id) {
-    this.http.delete(this.url + '/DeleteCity?cityId=' + id).subscribe(res => {
+    this.http.delete(this.coreService.DeleteUrl + '/DeleteCity?cityID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadCityTable(this.countryForm.Id ? this.countryForm.Id : null);
+      this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
     });
   }
 
   updateCity(city: City) {
     window.scroll(0, 1000);
     this.cityForm = new City;
-    this.cityForm.Id = city.Id;
-    this.cityForm.Name = city.Name;
-    this.cityForm.Name2 = city.Name2;
+    this.cityForm.ID = city.ID;
+    this.cityForm.NAME = city.NAME;
+    this.cityForm.NAME2 = city.NAME2;
     this.cityForm.ST_CNT_ID = city.ST_CNT_ID;
-    this.cityForm.Refernce_No = city.Refernce_No;
-    this.cityForm.Loc_Status = city.Loc_Status;
+    this.cityForm.REFERNCE_NO = city.REFERNCE_NO;
+    this.cityForm.LOC_STATUS = city.LOC_STATUS;
     this.cityForm.selected = true;
   }
 
@@ -299,10 +312,14 @@ export class StarterViewComponent implements OnInit {
 
     this.areaForm = this.areaForm.selected ? this.areaForm : Object.assign({}, form.value);
 
-    this.areaForm.Loc_Status = Number(this.areaForm.Loc_Status);
-    this.http.post(this.url + (this.areaForm.selected ? '/UpdateArea' : '/InsertArea'), this.areaForm).subscribe(res => {
+    this.areaForm.LOC_STATUS = Number(this.areaForm.LOC_STATUS);
+    if (this.areaForm.selected) {
+      this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateArea';
+    } else {
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateArea'; }
+    this.http.post( this.AddUpdateUrl, this.areaForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadAreaTable(this.cityForm.Id ? this.cityForm.Id : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
+      this.reloadAreaTable(this.cityForm.ID ? this.cityForm.ID : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
       this.areaForm = new Area;
       form.resetForm();
       this.submit3 = false;
@@ -310,29 +327,29 @@ export class StarterViewComponent implements OnInit {
   }
 
   deleteArea(id) {
-    this.http.delete(this.url + '/DeleteArea?areaId=' + id).subscribe(res => {
+    this.http.delete(this.coreService.DeleteUrl + '/DeleteArea?areaID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadAreaTable(this.cityForm.Id ? this.cityForm.Id : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
+      this.reloadAreaTable(this.cityForm.ID ? this.cityForm.ID : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
     });
   }
 
   updateArea(area: Area) {
     window.scroll(0, 1000);
     this.areaForm = new Area;
-    this.areaForm.Id = area.Id;
-    this.areaForm.Name = area.Name;
-    this.areaForm.Name2 = area.Name2;
+    this.areaForm.ID = area.ID;
+    this.areaForm.NAME = area.NAME;
+    this.areaForm.NAME2 = area.NAME2;
     this.areaForm.ST_CTY_ID = area.ST_CTY_ID;
     this.areaForm.ST_CNT_ID = area.ST_CNT_ID;
-    this.areaForm.Refernce_No = area.Refernce_No;
-    this.areaForm.Loc_Status = area.Loc_Status;
+    this.areaForm.REFERNCE_NO = area.REFERNCE_NO;
+    this.areaForm.LOC_STATUS = area.LOC_STATUS;
     this.areaForm.selected = true;
   }
 
 
 
   loadCities() {
-    this.coreService.loadCities(this.countryForm.Id ? this.countryForm.Id : null, null, 1).subscribe(data => {
+    this.coreService.loadCities(this.countryForm.ID ? this.countryForm.ID : null, null, 1).subscribe(data => {
       this.cities = data;
       this.citiesDataSource = new MatTableDataSource<City>(this.cities);
     });
@@ -363,8 +380,8 @@ export class StarterViewComponent implements OnInit {
   getCityName(id: number) {
     if (this.cities) {
       for (let index = 0; index < this.cities.length; index++) {
-        if (this.cities[index].Id === id) {
-          return this.cities[index].Name;
+        if (this.cities[index].ID === id) {
+          return this.cities[index].NAME;
         }
       }
     }
@@ -373,16 +390,16 @@ export class StarterViewComponent implements OnInit {
 
   getCountryName(id: number) {
     for (let index = 0; index < this.countries.length; index++) {
-      if (this.countries[index].Id === id) {
-        return this.countries[index].Name;
+      if (this.countries[index].ID === id) {
+        return this.countries[index].NAME;
       }
     }
   }
 
   getStatusName(id: number) {
     for (let index = 0; index < this.LockUps.length; index++) {
-      if (this.LockUps[index].Id === id) {
-        return this.LockUps[index].Name;
+      if (this.LockUps[index].ID === id) {
+        return this.LockUps[index].NAME;
       }
     }
   }

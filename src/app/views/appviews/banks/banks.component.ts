@@ -1,16 +1,18 @@
-import { Country } from './../../../models/country';
-import { City } from './../../../models/City';
+
 import { CoreService } from './../../../_services/CoreServices.service';
-import { Branch } from './../../../models/branch';
-import { Bank } from './../../../models/bank';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { environment } from '../../../../environments/environment';
-import { Currency } from './../../../models/Currency';
-import { LockUp } from './../../../models/LockUp';
+import { Bank } from '../../../entities/models/bank';
+import { BankBranches } from '../../../entities/models/BankBranches';
+import { LockUp } from '../../../entities/models/LockUp';
+import { Currency } from '../../../entities/models/Currency';
+import { Country } from '../../../entities/models/country';
+import { City } from '../../../entities/models/City';
+
 
 @Component({
   selector: 'app-banks',
@@ -19,13 +21,12 @@ import { LockUp } from './../../../models/LockUp';
 })
 export class BanksComponent implements OnInit {
 
-  url: string = environment.azureUrl + 'core';
 
   bankForm: Bank;
   banks: Bank[];
 
-  branchForm: Branch;
-  branchs: Branch[];
+  branchForm: BankBranches;
+  branchs: BankBranches[];
 
   LockUps: LockUp[];
   currencies: Currency[];
@@ -35,15 +36,15 @@ export class BanksComponent implements OnInit {
 
   submit: boolean;
   submit2: boolean;
-
-  bankTableColumns = ['select', 'Id', 'Code', 'Name', 'Name2', 'Phone_Code', 'Phone', 'actions'];
+  AddUpdateUrl: string;
+  bankTableColumns = ['select', 'ID', 'CODE', 'NAME', 'NAME2', 'PHONE_CODE', 'PHONE', 'actions'];
   banksDataSource: MatTableDataSource<Bank>;
 
-  branchTableColumns = ['select', 'Id', 'Name', 'Name2', 'Bank', 'actions'];
-  branchsDataSource: MatTableDataSource<Branch>;
+  branchTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'BANK', 'actions'];
+  branchsDataSource: MatTableDataSource<BankBranches>;
 
   selection: SelectionModel<Bank>;
-  selection2: SelectionModel<Branch>;
+  selection2: SelectionModel<BankBranches>;
 
   extraForm: string;
 
@@ -62,12 +63,12 @@ export class BanksComponent implements OnInit {
     const initialSelection = [];
 
     this.selection = new SelectionModel<Bank>(true, initialSelection);
-    this.selection2 = new SelectionModel<Branch>(true, initialSelection);
+    this.selection2 = new SelectionModel<BankBranches>(true, initialSelection);
 
     this.snackPosition = 'right';
 
     this.bankForm = new Bank();
-    this.branchForm = new Branch();
+    this.branchForm = new BankBranches();
 
     this.submit = false;
     this.submit2 = false;
@@ -104,7 +105,7 @@ export class BanksComponent implements OnInit {
           break;
         case 1:
           this.extraForm = 'branchs';
-          this.reloadBranchTable(this.bankForm.Id ? this.bankForm.Id : null);
+          this.reloadBranchTable(this.bankForm.ID ? this.bankForm.ID : null);
           break;
       }
     });
@@ -125,7 +126,7 @@ export class BanksComponent implements OnInit {
 
   renderBranchTable(data) {
     this.branchs = data;
-    this.branchsDataSource = new MatTableDataSource<Branch>(data);
+    this.branchsDataSource = new MatTableDataSource<BankBranches>(data);
     this.branchsDataSource.paginator = this.paginator2;
     this.branchsDataSource.sort = this.sort2;
     this.branchsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
@@ -162,8 +163,11 @@ export class BanksComponent implements OnInit {
       return;
     }
     this.bankForm = this.bankForm.selected ? this.bankForm : Object.assign({}, form.value);
-    this.bankForm.Loc_Status = Number(this.bankForm.Loc_Status);
-    this.http.post(this.url + (this.bankForm.selected ? '/UpdateBank' : '/InsertBank'), this.bankForm).subscribe(res => {
+    if (this.bankForm.selected) {
+      this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateBank';
+    } else {
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateBank'; }
+    this.http.post(this.AddUpdateUrl, this.bankForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBankTable();
       this.bankForm = new Bank();
@@ -174,7 +178,7 @@ export class BanksComponent implements OnInit {
   }
 
   deleteBank(id) {
-    this.http.delete(this.url + '/DeleteBank?bankId=' + id).subscribe(res => {
+    this.http.delete(this.coreService.DeleteUrl + '/DeleteBank?bankID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBankTable();
     });
@@ -183,15 +187,12 @@ export class BanksComponent implements OnInit {
   updateBank(bank: Bank) {
     window.scroll(0, 0);
     this.bankForm = new Bank;
-    this.bankForm.Id = bank.Id;
-    this.bankForm.Name = bank.Name;
-    this.bankForm.Name2 = bank.Name2;
-    this.bankForm.Nationality = bank.Nationality;
-    this.bankForm.ST_CUR_COD = bank.ST_CUR_COD;
-    this.bankForm.Refernce_No = bank.Refernce_No;
-    this.bankForm.Loc_Status = bank.Loc_Status;
-    this.bankForm.Phone_Code = bank.Phone_Code;
-    this.bankForm.Flag = bank.Flag;
+    this.bankForm.ID = bank.ID;
+    this.bankForm.NAME = bank.NAME;
+    this.bankForm.NAME2 = bank.NAME2;
+    this.bankForm.CODE = bank.CODE;
+    this.bankForm.PHONE_CODE = bank.PHONE_CODE;
+    this.bankForm.PHONE = bank.PHONE;
     this.bankForm.selected = true;
   }
 
@@ -201,11 +202,15 @@ export class BanksComponent implements OnInit {
   saveBranch(form) {
     if (form.invalid) { return; }
     this.branchForm = this.branchForm.selected ? this.branchForm : Object.assign({}, form.value);
-    this.branchForm.Loc_Status = Number(this.branchForm.Loc_Status);
-    this.http.post(this.url + (this.branchForm.selected ? '/UpdateBranch' : '/InsertBranch'), this.branchForm).subscribe(res => {
+
+    if (this.branchForm.selected) {
+      this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateBankBranch';
+    } else {
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateBankBranch'; }
+    this.http.post(this.AddUpdateUrl, this.branchForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadBranchTable(this.bankForm.Id ? this.bankForm.Id : null);
-      this.branchForm = new Branch;
+      this.reloadBranchTable(this.bankForm.ID ? this.bankForm.ID : null);
+      this.branchForm = new BankBranches;
       this.submit2 = false;
       form.resetForm();
     });
@@ -213,29 +218,32 @@ export class BanksComponent implements OnInit {
   }
 
   deleteBranch(id) {
-    this.http.delete(this.url + '/DeleteBranch?cityId=' + id).subscribe(res => {
+    this.http.delete(this.coreService.DeleteUrl + '/DeleteBankBranch?bankBranchesID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadBranchTable(this.bankForm.Id ? this.bankForm.Id : null);
+      this.reloadBranchTable(this.bankForm.ID ? this.bankForm.ID : null);
     });
   }
 
-  updateBranch(city: Branch) {
+  updateBranch(bankcBranches: BankBranches) {
     window.scroll(0, 1000);
-    this.branchForm = new Branch;
-    this.branchForm.Id = city.Id;
-    this.branchForm.Name = city.Name;
-    this.branchForm.Name2 = city.Name2;
-    this.branchForm.ST_CNT_ID = city.ST_CNT_ID;
-    this.branchForm.Refernce_No = city.Refernce_No;
-    this.branchForm.Loc_Status = city.Loc_Status;
+    this.branchForm = new BankBranches;
+    this.branchForm.ID = bankcBranches.ID;
+    this.branchForm.NAME = bankcBranches.NAME;
+    this.branchForm.NAME2 = bankcBranches.NAME;
+    this.branchForm.ST_CNT_ID = bankcBranches.ST_CNT_ID;
+    this.branchForm.ST_CITY_ID = bankcBranches.ST_CITY_ID;
+    this.branchForm.ST_BNK_ID = bankcBranches.ST_BNK_ID;
+    this.branchForm.CODE = bankcBranches.CODE;
+    this.branchForm.PHONE = bankcBranches.PHONE;
+    this.branchForm.PHONE_CODE = bankcBranches.PHONE_CODE;
     this.branchForm.selected = true;
   }
 
 
   loadBranchs() {
-    this.coreService.loadBranchs(this.bankForm.Id ? this.bankForm.Id : null, null, 1).subscribe(data => {
+    this.coreService.loadBranchs(this.bankForm.ID ? this.bankForm.ID : null, null, 1).subscribe(data => {
       this.branchs = data;
-      this.branchsDataSource = new MatTableDataSource<Branch>(this.branchs);
+      this.branchsDataSource = new MatTableDataSource<BankBranches>(this.branchs);
     });
   }
 
@@ -257,8 +265,8 @@ export class BanksComponent implements OnInit {
   getBranchName(id: number) {
     if (this.branchs) {
       for (let index = 0; index < this.branchs.length; index++) {
-        if (this.branchs[index].Id === id) {
-          return this.branchs[index].Name;
+        if (this.branchs[index].ID === id) {
+          return this.branchs[index].NAME;
         }
       }
     }
@@ -267,8 +275,8 @@ export class BanksComponent implements OnInit {
 
   getBankName(id: number) {
     for (let index = 0; index < this.banks.length; index++) {
-      if (this.banks[index].Id === id) {
-        return this.banks[index].Name;
+      if (this.banks[index].ID === id) {
+        return this.banks[index].NAME;
       }
     }
   }
