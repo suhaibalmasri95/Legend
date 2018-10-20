@@ -155,7 +155,7 @@
                       <td style="width: 10%" mat-cell *matCellDef="let element">
                         <i (click)="updateBank(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                         <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteBank(element.Id)" ngbTooltip="Delete"></i>
+                          placement="left" (confirm)="deleteBank(element.ID)" ngbTooltip="Delete"></i>
                       </td>
                     </ng-container>
 
@@ -247,7 +247,7 @@
                       <td mat-cell *matCellDef="let element">
                         <i (click)="updateBranch(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                         <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteBranch(element.Id)" ngbTooltip="Delete"></i>
+                          placement="left" (confirm)="deleteBranch(element.ID)" ngbTooltip="Delete"></i>
                       </td>
                     </ng-container>
 
