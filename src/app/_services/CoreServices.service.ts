@@ -79,7 +79,19 @@ export class CoreService {
   }
 
   LoadLockUpsByMajorCode(majorCode: number = 1): Observable<LockUp[]> {
+    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUps?MajorCode=' + majorCode);
+  }
+
+  LoadLockUpStatus(majorCode: number = 1): Observable<LockUp[]> {
     return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUpStatus?MajorCode=' + majorCode);
+  }
+
+  LoadLockUpsByMinorCode(minorCode: number = 1): Observable<LockUp[]> {
+    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUps?MinorCode=' + minorCode);
+  }
+
+  LoadLockUpsByParentID(LockupParentID: number = 1): Observable<LockUp[]> {
+    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUps?LockupParentID=' + LockupParentID);
   }
 
   ExportToPdf(fileName: string, Type: string) {
@@ -106,8 +118,15 @@ export class CoreService {
     return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUps');
   }
 
-  loadMinorCodes(countryId: number = null, cityId: number = null, langId: number = null): Observable<LockUp[]> {
-    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUps');
+
+
+  loadMinorCodes(majorCode: number): Observable<LockUp[]> {
+    let queryString = '';
+
+    if (majorCode != null) {
+      queryString += 'MajorCode=' + majorCode;
+    }
+    return this.http.get<LockUp[]>(this.QueryUrl + '/LoadLockUpsMinorCode?' + queryString);
   }
 
 

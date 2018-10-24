@@ -103,10 +103,10 @@
                                             <label for="FLAG" class="custom-file-upload">
                                                 <i class="fa fa-cloud-upload"></i> Upload
                                             </label>
-                                           
-                                        </span> 
+
+                                        </span>
                                         <input id="FLAG" name="FLAG" type="file" [(ngModel)]="countryForm.FLAG"
-                                                ng2FileSelect [uploader]="uploader">
+                                            ng2FileSelect [uploader]="uploader">
                                         <a *ngIf="countryForm.FLAG" (click)="countryForm.FLAG=null" class="input-group-addon btn btn-default fileinput-exists"
                                             data-dismiss="fileinput">Remove</a>
                                     </div>
@@ -116,8 +116,8 @@
                                     <br>
                                     <br>
                                     <div class="btn-group">
-                                        <input class="btn btn-default" type="reset" (click)="countryForm={};submit=false;form.$setpristine()"
-                                            value="Rest" />
+                                        <input class="btn btn-default" type="reset" (click)="countryForm={};submit=false;resetForm(form)"
+                                            value="Reset" />
                                         <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                                     </div>
                                 </div>
@@ -136,7 +136,7 @@
                                     <div class="dt-buttons btn-group">
                                         <button class="btn btn-default" [disabled]="!selection.hasValue()"
                                             mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                                            placement="bottom" (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete">
+                                            placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                                             <img src="assets/images/Trash-can.png"></button>
                                         <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"
                                             placement="bottom" ngbTooltip="Export to CSV"><span>
@@ -154,85 +154,90 @@
                                     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                                 </mat-form-field>
                                 <div class="x">
-                                    <table mat-table #table [dataSource]="countriesDataSource" matSort>
+                                    <div class="table-container">
+                                        <table mat-table #table [dataSource]="countriesDataSource" matSort>
 
-                                        <ng-container matColumnDef="select">
-                                            <th mat-header-cell *matHeaderCellDef>
-                                                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-                                                </mat-checkbox>
-                                            </th>
-                                            <td style="width: 5%" mat-cell *matCellDef="let row">
-                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                                                    [checked]="selection.isSelected(row)">
-                                                </mat-checkbox>
-                                            </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                                            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                                            </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="NAME">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                                            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
-                                            </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="NAME2">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                                            <td style="width: 15%" mat-cell *matCellDef="let element">
-                                                {{element.NAME2}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="NATIONALITY">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationality</th>
-                                            <td style="width: 20%" mat-cell *matCellDef="let element">
-                                                {{element.NATIONALITY}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="ST_CUR_CODE">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code </th>
-                                            <td style="width: 10%" mat-cell *matCellDef="let element">
-                                                {{element.ST_CUR_CODE}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="PHONE_CODE">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
-                                            <td style="width: 5%" mat-cell *matCellDef="let element">
-                                                {{element.PHONE_CODE}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="LOC_STATUS">
-                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                                                <td style="width: 10%" mat-cell *matCellDef="let element">
-                                                        {{getStatusName(element.LOC_STATUS)}} </td>
+                                            <ng-container matColumnDef="select">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                                    </mat-checkbox>
+                                                </th>
+                                                <td style="width: 5%" mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                                        [checked]="selection.isSelected(row)">
+                                                    </mat-checkbox>
+                                                </td>
                                             </ng-container>
 
-                                        <ng-container matColumnDef="FLAG">
-                                            <th mat-header-cell *matHeaderCellDef>Flag </th>
-                                            <td style="width: 5%" mat-cell *matCellDef="let element">
-                                                <img style="height: 30px;" src="{{element.FLAG}}"></td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                                                <td style="width: 5%" mat-cell *matCellDef="let element">
+                                                    {{element.ID}}
+                                                </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="actions">
-                                            <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                            <td style="width: 20%" mat-cell *matCellDef="let element">
-                                                <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
-                                                    ngbTooltip="Edit"></i>
-                                                <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
-                                                    [popoverMessage]="'are you sure to delete?'" placement="left"
-                                                    (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete"></i>
-                                            </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="NAME">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                                                <td style="width: 15%" mat-cell *matCellDef="let element">
+                                                    {{element.NAME}}
+                                                </td>
+                                            </ng-container>
 
-                                        <tr mat-header-row *matHeaderRowDef="countryTableColumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: countryTableColumns;" (click)="updateCountry(row)"
-                                            class=" mat-row {{countryForm.ID===row.ID?'active':'not-active'}}"></tr>
+                                            <ng-container matColumnDef="NAME2">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                                                <td style="width: 15%" mat-cell *matCellDef="let element">
+                                                    {{element.NAME2}} </td>
+                                            </ng-container>
 
-                                    </table>
+                                            <ng-container matColumnDef="NATIONALITY">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationality</th>
+                                                <td style="width: 20%" mat-cell *matCellDef="let element">
+                                                    {{element.NATIONALITY}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="ST_CUR_CODE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code
+                                                </th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{element.ST_CUR_CODE}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="PHONE_CODE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
+                                                <td style="width: 5%" mat-cell *matCellDef="let element">
+                                                    {{element.PHONE_CODE}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="LOC_STATUS">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{getStatusName(element.LOC_STATUS)}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="FLAG">
+                                                <th mat-header-cell *matHeaderCellDef>Flag </th>
+                                                <td style="width: 5%" mat-cell *matCellDef="let element">
+                                                    <img style="height: 30px;" src="{{element.FLAG}}"></td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="actions">
+                                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                                <td style="width: 20%" mat-cell *matCellDef="let element">
+                                                    <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
+                                                        ngbTooltip="Edit"></i>
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                        [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                        (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete"></i>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="countryTableColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: countryTableColumns;" (click)="updateCountry(row)"
+                                                class=" mat-row {{countryForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                                        </table>
+                                    </div>
                                     <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]"
                                         [showFirstLastButtons]="true"></mat-paginator>
 
@@ -247,7 +252,7 @@
                                     <div class="dt-buttons btn-group">
                                         <button class="btn btn-default" [disabled]="!selection2.hasValue()"
                                             mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                                            placement="bottom" (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete">
+                                            placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                                             <img src="assets/images/Trash-can.png"></button>
                                         <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','city')"
                                             placement="bottom" ngbTooltip="Export to CSV"><span>
@@ -279,58 +284,60 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="x">
-                                    <table mat-table #table2 [dataSource]="citiesDataSource" matSort>
+                                    <div class="table-container">
+                                        <table mat-table #table2 [dataSource]="citiesDataSource" matSort>
 
-                                        <ng-container matColumnDef="select">
-                                            <th mat-header-cell *matHeaderCellDef>
-                                                <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
-                                                    [indeterminate]="selection2.hasValue() && !isAllSelected2()">
-                                                </mat-checkbox>
-                                            </th>
-                                            <td mat-cell *matCellDef="let row">
-                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
-                                                    [checked]="selection2.isSelected(row)">
-                                                </mat-checkbox>
-                                            </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="select">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                                                        [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                                                    </mat-checkbox>
+                                                </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                                                        [checked]="selection2.isSelected(row)">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="NAME">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="NAME">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="NAME2">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                                            <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="NAME2">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="ST_CNT_ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
-                                            <td mat-cell *matCellDef="let element">{{getCountryName(element.ST_CNT_ID)}}
-                                            </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="ST_CNT_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
+                                                <td mat-cell *matCellDef="let element">{{getCountryName(element.ST_CNT_ID)}}
+                                                </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="actions">
-                                            <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <i (click)="updateCity(element)" class="fa fa-edit" placement="left"
-                                                    ngbTooltip="Edit"></i>
-                                                <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
-                                                    [popoverMessage]="'are you sure to delete?'" placement="left"
-                                                    (confirm)="deleteCity(element.ID)" ngbTooltip="Delete"></i>
-                                            </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="actions">
+                                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <i (click)="updateCity(element)" class="fa fa-edit" placement="left"
+                                                        ngbTooltip="Edit"></i>
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                        [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                        (confirm)="deleteCity(element.ID)" ngbTooltip="Delete"></i>
+                                                </td>
+                                            </ng-container>
 
-                                        <tr mat-header-row *matHeaderRowDef="cityTableColumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: cityTableColumns;" (click)="updateCity(row)"
-                                            class=" mat-row {{cityForm.ID===row.ID?'active':'not-active'}}"></tr>
+                                            <tr mat-header-row *matHeaderRowDef="cityTableColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: cityTableColumns;" (click)="updateCity(row)"
+                                                class=" mat-row {{cityForm.ID===row.ID?'active':'not-active'}}"></tr>
 
-                                    </table>
+                                        </table>
+                                    </div>
                                     <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]"
                                         [showFirstLastButtons]="true"></mat-paginator>
                                 </div>
@@ -388,8 +395,8 @@
                                                 <div class="col-md-8 text-right">
                                                     <br>
                                                     <br>
-                                                    <input class="btn btn-default" type="reset" (click)="cityForm={};submit2=false;form.$setpristine()"
-                                                        value="Rest" />
+                                                    <input class="btn btn-default" type="reset" (click)="cityForm={};submit2=false;resetForm(form)"
+                                                        value="Reset" />
 
                                                     <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
                                                 </div>
@@ -402,100 +409,106 @@
                         </mat-tab>
                         <mat-tab label="Areas">
                             <div class="col-md-12">
-
-                                <div class="dt-buttons btn-group">
-                                    <button class="btn btn-default" [disabled]="!selection3.hasValue()"
-                                        mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                                        placement="bottom" (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete">
-                                        <img src="assets/images/Trash-can.png"></button>
-                                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','area')"
-                                        placement="bottom" ngbTooltip="Export to CSV"><span>
-                                            <img src="assets/images/csv.jpg"></span></a>
-                                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','area')"
-                                        placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
-                                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','area')"
-                                        placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
-                                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
-                                                src="assets/images/print.jpg"></span></a>
+                                <div class="html5buttons">
+                                    <div class="dt-buttons btn-group">
+                                        <button class="btn btn-default" [disabled]="!selection3.hasValue()"
+                                            mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
+                                            placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                                            <img src="assets/images/Trash-can.png"></button>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','area')"
+                                            placement="bottom" ngbTooltip="Export to CSV"><span>
+                                                <img src="assets/images/csv.jpg"></span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','area')"
+                                            placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','area')"
+                                            placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                                        <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
+                                                    src="assets/images/print.jpg"></span></a>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <mat-form-field>
-                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-3">
-                                    <mat-form-field>
-                                        <mat-select placeholder="Country" (selectionChange)="reloadCityTable(areaForm.ST_CNT_ID)"
-                                            [(ngModel)]="areaForm.ST_CNT_ID">
-                                            <mat-option [value]=""> All </mat-option>
-                                            <mat-option *ngFor="let country of countries" [value]="country.ID">
-                                                {{country.NAME}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-3">
-                                    <mat-form-field>
-                                        <mat-select placeholder="city" [disabled]="!cities ||cities.length===0"
-                                            [(ngModel)]="areaForm.ST_CTY_ID" (selectionChange)="reloadAreaTable(areaForm.ST_CNT_ID,areaForm.ST_CTY_ID)">
-                                            <mat-option [value]=""> All </mat-option>
-                                            <mat-option *ngFor="let city of cities" [value]="city.ID">
-                                                {{city.NAME}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Country" (selectionChange)="reloadCityTable(areaForm.ST_CNT_ID)"
+                                                [(ngModel)]="areaForm.ST_CNT_ID">
+                                                <mat-option [value]=""> All </mat-option>
+                                                <mat-option *ngFor="let country of countries" [value]="country.ID">
+                                                    {{country.NAME}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select placeholder="city" [disabled]="!cities ||cities.length===0"
+                                                [(ngModel)]="areaForm.ST_CTY_ID" (selectionChange)="reloadAreaTable(areaForm.ST_CNT_ID,areaForm.ST_CTY_ID)">
+                                                <mat-option [value]=""> All </mat-option>
+                                                <mat-option *ngFor="let city of cities" [value]="city.ID">
+                                                    {{city.NAME}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
                                 </div>
                                 <div class="x">
-                                    <table mat-table #table3 [dataSource]="areasDataSource" matSort>
-                                        <ng-container matColumnDef="select">
-                                            <th mat-header-cell *matHeaderCellDef>
-                                                <mat-checkbox (change)="$event ? masterToggle3() : null" [checked]="selection3.hasValue() && isAllSelected3()"
-                                                    [indeterminate]="selection3.hasValue() && !isAllSelected3()">
-                                                </mat-checkbox>
-                                            </th>
-                                            <td mat-cell *matCellDef="let row">
-                                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection3.toggle(row) : null"
-                                                    [checked]="selection3.isSelected(row)">
-                                                </mat-checkbox>
-                                            </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="NAME">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="NAME2">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="ST_CNT_ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                {{getCountryName(element.ST_CNT_ID)}}
-                                            </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="ST_CTY_ID">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
-                                            <td mat-cell *matCellDef="let element"> {{getCityName(element.ST_CTY_ID)}}
-                                            </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="actions">
-                                            <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <i (click)="updateArea(element)" class="fa fa-edit" placement="left"
-                                                    ngbTooltip="Edit"></i>
-                                                <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
-                                                    [popoverMessage]="'are you sure to delete?'" placement="left"
-                                                    (confirm)="deleteArea(element.ID)" ngbTooltip="Delete"></i>
-                                            </td>
-                                        </ng-container>
-                                        <tr mat-header-row *matHeaderRowDef="areaTableColumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: areaTableColumns;" (click)="updateArea(row)"
-                                            class=" mat-row {{areaForm.ID===row.ID?'active':'not-active'}}"></tr>
-                                    </table>
+                                    <div class="table-container">
+                                        <table mat-table #table3 [dataSource]="areasDataSource" matSort>
+                                            <ng-container matColumnDef="select">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="$event ? masterToggle3() : null" [checked]="selection3.hasValue() && isAllSelected3()"
+                                                        [indeterminate]="selection3.hasValue() && !isAllSelected3()">
+                                                    </mat-checkbox>
+                                                </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection3.toggle(row) : null"
+                                                        [checked]="selection3.isSelected(row)">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="NAME">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="NAME2">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ST_CNT_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    {{getCountryName(element.ST_CNT_ID)}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ST_CTY_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    {{getCityName(element.ST_CTY_ID)}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="actions">
+                                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <i (click)="updateArea(element)" class="fa fa-edit" placement="left"
+                                                        ngbTooltip="Edit"></i>
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                        [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                        (confirm)="deleteArea(element.ID)" ngbTooltip="Delete"></i>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="areaTableColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: areaTableColumns;" (click)="updateArea(row)"
+                                                class=" mat-row {{areaForm.ID===row.ID?'active':'not-active'}}"></tr>
+                                        </table>
+                                    </div>
 
                                     <mat-paginator #paginator3 [pageSizeOptions]="[10, 20, 30 ,40,50]"
                                         showFirstLastButtons></mat-paginator>
@@ -568,8 +581,8 @@
                                                 <div class="col-md-5 text-right">
                                                     <br>
                                                     <br>
-                                                    <input class="btn btn-default" type="reset" (click)="areaForm={};submit3=false;form.$setpristine()"
-                                                        value="Rest" />
+                                                    <input class="btn btn-default" type="reset" (click)="areaForm={};submit3=false;resetForm(form)"
+                                                        value="Reset" />
 
                                                     <input class="btn btn-primary " type="submit" value="Save" (click)="submit3=true" />
                                                 </div>

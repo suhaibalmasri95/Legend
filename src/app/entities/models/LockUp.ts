@@ -10,4 +10,5 @@ export class LockUp extends Common {
     MODIFICATION_DATE: Date;
     LOCKUP_TYPE: number;
     REF_NO: string;
+  
 }

@@ -42,7 +42,7 @@
                   <form #form="ngForm" (ngSubmit)="saveMajorCode(form)" class="{{submit?'submited':''}}">
                     <div class="row">
                       <div class="form-group col-md-3">
-                        <label for="MAJOR_CODE(">Major Code</label>
+                        <label for="MAJOR_CODE(">Major Code<span class="help-block">*</span></label>
                         <input name="MAJOR_CODE" placeholder="Major Code" type="text" class="form-control" [(ngModel)]="majorCodeForm.MAJOR_CODE"
                           required>
                       </div>
@@ -57,28 +57,25 @@
                       </div>
                       <div class="form-group col-md-3">
                         <label for="REF_NO">Reference No</label>
-                        <input name="REF_NO" placeholder="Reference No" type="text" class="form-control"
-                          [(ngModel)]="majorCodeForm.REF_NO">
+                        <input name="REF_NO" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="majorCodeForm.REF_NO">
                       </div>
                     </div>
 
                     <div class="row">
                       <div class="form-group col-md-3">
-                        <label for="ST_LOCKUP_ID">Parent Code<span class="help-block">*</span></label>
-                        <select name="ST_LOCKUP_ID"  class="form-control" [(ngModel)]="majorCodeForm.ST_LOCKUP_ID">
+                        <label for="ST_LOCKUP_ID">Parent Code</label>
+                        <select name="ST_LOCKUP_ID" class="form-control" [(ngModel)]="majorCodeForm.ST_LOCKUP_ID">
                           <option [ngValue]="">Select</option>
-                          <option *ngFor="let parentCode of LockUps" [ngValue]="parentCode.ID">{{parentCode.NAME}}</option>
+                          <option *ngFor="let parentCode of majorCodes" [ngValue]="parentCode.ID">{{parentCode.NAME}}</option>
                         </select>
                       </div>
-
-
 
                       <div class="col-md-7 text-right">
                         <br>
                         <br>
                         <div class="btn-group">
-                          <input class="btn btn-default" type="reset" (click)="majorCodeForm={};submit=false;form.$setpristine()"
-                            value="Rest" />
+                          <input class="btn btn-default" type="reset" (click)="minorCodeForm.MAJOR_CODE=null;majorCodeForm={};submit=false;resetForm(form)"
+                            value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                         </div>
                       </div>
@@ -93,14 +90,14 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteMajorCode(element.ID)" ngbTooltip="Delete">
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','majorCode')" placement="bottom"
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Majorcode')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','majorCode')"
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','Majorcode')"
                       placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','majorCode')" placement="bottom"
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','Majorcode')" placement="bottom"
                       ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
@@ -110,61 +107,69 @@
                   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                 </mat-form-field>
                 <div class="x">
-                  <table mat-table #table [dataSource]="majorCodesDataSource" matSort>
+                  <div class="table-container">
 
-                    <ng-container matColumnDef="select">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()">
-                        </mat-checkbox>
-                      </th>
-                      <td style="width: 5%" mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
+                    <table mat-table #table [dataSource]="majorCodesDataSource" matSort>
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                          </mat-checkbox>
+                        </th>
+                        <td style="width: 5%" mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="ID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="MAJOR_CODE">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
-                      <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.MAJOR_CODE}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="MAJOR_CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.MAJOR_CODE}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME2">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.NAME2}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.NAME2}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="ST_LOCKUP_ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Code</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{getMajorCodeName(element.ST_LOCKUP_ID)}} </td>
+                      </ng-container>
 
 
 
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>Actions</th>
-                      <td style="width: 10%" mat-cell *matCellDef="let element">
-                        <i (click)="updateMajorCode(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
-                        <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteMajorCode(element.ID)" ngbTooltip="Delete"></i>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          <i (click)="updateMajorCode(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteMajorCode(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="majorCodeTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: majorCodeTableColumns;" (click)="updateMajorCode(row)"
-                      class=" mat-row {{majorCodeForm.MAJOR_CODE===row.MAJOR_CODE?'active':'not-active'}}"></tr>
+                      <tr mat-header-row *matHeaderRowDef="majorCodeTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: majorCodeTableColumns;" (click)="updateMajorCode(row)"
+                        class=" mat-row {{majorCodeForm.ID===row.ID?'active':'not-active'}}"></tr>
 
-                  </table>
+                    </table>
+                  </div>
                   <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
 
                 </div>
@@ -186,7 +191,7 @@
                         <div class="form-group col-md-3">
                           <label for="MAJOR_CODE">Major Code <span class="help-block">*</span></label>
                           <select name="MAJOR_CODE" class="form-control" [(ngModel)]="minorCodeForm.MAJOR_CODE"
-                            required>
+                            (change)="updateMajorCodeFromMinor(minorCodeForm.MAJOR_CODE)" required>
                             <option [ngValue]="">Select</option>
                             <option *ngFor="let majorCode of majorCodes" [ngValue]="majorCode.ID">{{majorCode.NAME}}</option>
                           </select>
@@ -215,24 +220,30 @@
 
                         <div class="form-group col-md-3">
                           <label for="REF_NO">Reference No</label>
-                          <input name="REF_NO" placeholder="Reference No" type="text" class="form-control"
-                            [(ngModel)]="majorCodeForm.REF_NO">
+                          <input name="REF_NO" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="minorCodeForm.REF_NO">
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="ST_LOCKUP_ID">Parent Code<span class="help-block">*</span></label>
+                          <label for="ST_LOCKUP_ID">Parent Code<span *ngIf='parentMinorCodes!==null' class="help-block">*</span></label>
                           <select name="ST_LOCKUP_ID" class="form-control" [(ngModel)]="minorCodeForm.ST_LOCKUP_ID"
-                            required>
-                            <option [ngValue]="">Select</option>
-                            <option *ngFor="let majorCode of majorCodes" [ngValue]="majorCode.ID">{{majorCode.NAME}}</option>
+                            [required]='parentMinorCodes!==null' [disabled]="parentMinorCodes===null">
+                            <option value="">Select</option>
+                            <!-- <option *ngFor="let majorCode of majorCodes" [ngValue]="majorCode.ID" 
+                            [selected]="minorCodeForm.MAJOR_CODE==majorCode.ST_LOCKUP_ID">{{majorCode.NAME}}</option> -->
+
+                            <ng-container *ngFor="let minorCode of parentMinorCodes">
+                              <option *ngIf="minorCode.ST_LOCKUP_ID || true" [ngValue]="minorCode.ID">{{minorCode.NAME}}</option>
+                            </ng-container>
                           </select>
+
+
                         </div>
 
                         <div class="col-md-6 text-right">
                           <br>
                           <br>
-                          <input class="btn btn-default" type="reset" (click)="minorCodeForm={};submit2=false;form.$setpristine()"
-                            value="Rest" />
+                          <input class="btn btn-default" type="reset" (click)="minorCodeForm={};submit2=false;resetForm(form)"
+                            value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
                         </div>
                       </div>
@@ -248,86 +259,111 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteMajorCode(element.ID)" ngbTooltip="Delete">
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','minorCode')" placement="bottom"
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','minorcode')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','minorCode')"
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','minorcode')"
                       placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
                     </a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','minorCode')" placement="bottom"
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','minorcode')" placement="bottom"
                       ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                  <mat-form-field>
-                    <mat-select placeholder="MajorCode" (selectionChange)="reloadMinorCodeTable(minorCodeForm.MINOR_CODE)"
-                      [(ngModel)]="minorCodeForm.MINOR_CODE">
-                      <mat-option [value]=""> All </mat-option>
-                      <mat-option *ngFor="let majorCode of majorCodes" [value]="majorCode.ID">
-                        {{majorCode.NAME}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                <div class="col-md-12">
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Major Code" (selectionChange)="reloadMinorCodeTable(minorCodeFilter);checkFilterMajorCodeParent(minorCodeFilter)"
+                        [(ngModel)]="minorCodeFilter">
+                        <mat-option [value]=""> All </mat-option>
+                        <mat-option *ngFor="let majorCode of majorCodes" [value]="majorCode.ID">
+                          {{majorCode.NAME}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Parent Code" [disabled]="filterParentMinorCodes===null"
+                        (selectionChange)="filterMinorCodeTableByParentMinorCode(parentMinorCodeFilter)" [(ngModel)]="parentMinorCodeFilter">
+                        <mat-option [value]=""> All </mat-option>
+                        <mat-option *ngFor="let minorCode of filterParentMinorCodes" [value]="minorCode.ID">
+                          {{minorCode.NAME}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
                 </div>
                 <div class="x">
-                  <table mat-table #table2 [dataSource]="minorCodesDataSource" matSort>
+                  <div class="table-container">
+                    <table mat-table #table2 [dataSource]="minorCodesDataSource" matSort>
 
-                    <ng-container matColumnDef="select">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
-                          [indeterminate]="selection2.hasValue() && !isAllSelected2()">
-                        </mat-checkbox>
-                      </th>
-                      <td mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                            [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                            [checked]="selection2.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="ID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="MINOR_CODE">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
-                      <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.MINOR_CODE}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="NAME">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="MINOR_CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.MINOR_CODE}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="MAJOR_CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Major Code</th>
+                        <td style="width: 20%" mat-cell *matCellDef="let element">
+                          {{getMajorCodeName(element.MAJOR_CODE)}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME2">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
+                      </ng-container>
 
+                      <ng-container matColumnDef="ST_LOCKUP_ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Code</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{getMinorCodeName(element.ST_LOCKUP_ID)}} </td>
+                      </ng-container>
 
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <i (click)="updateMinorCode(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteMinorCode(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>Actions</th>
-                      <td mat-cell *matCellDef="let element">
-                        <i (click)="updateMinorCode(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
-                        <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteMinorCode(element.ID)" ngbTooltip="Delete"></i>
-                      </td>
-                    </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="minorCodeTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: minorCodeTableColumns;" (click)="updateMinorCode(row)"
+                        class=" mat-row {{minorCodeForm.ID===row.ID?'active':'not-active'}}"></tr>
 
-                    <tr mat-header-row *matHeaderRowDef="minorCodeTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: minorCodeTableColumns;" (click)="updateMinorCode(row)"
-                      class=" mat-row {{minorCodeForm.ID===row.ID?'active':'not-active'}}"></tr>
-
-                  </table>
+                    </table>
+                  </div>
                   <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
                 </div>
 
@@ -348,7 +384,7 @@
                     <legend>
                       Currency
                     </legend>
-                    <form #form="ngForm" (ngSubmit)="saveCurrency(form)" class="{{submit2?'submited':''}}">
+                    <form #form="ngForm" (ngSubmit)="saveCurrency(form)" class="{{submit3?'submited':''}}">
                       <div class="row">
                         <div class="form-group col-md-3">
                           <label for="CODE">Code</label>
@@ -396,15 +432,15 @@
                         </div>
                         <div class="form-group col-md-3">
                           <label for="FRACT_NAME2">Fraction 2<span class="help-block">*</span></label>
-                          <input name="FRACT_NAME2" placeholder="Fraction 2" type="text" class="form-control" [(ngModel)]="currencyForm.FRACT_NAME2"
-                            required>
+                          <input name="FRACT_NAME2" placeholder="Fraction 2" type="text" class="form-control"
+                            [(ngModel)]="currencyForm.FRACT_NAME2" required>
                         </div>
                         <div class="col-md-12 text-right">
                           <br>
                           <br>
-                          <input class="btn btn-default" type="reset" (click)="currencyForm={};submit2=false;form.$setpristine()"
-                            value="Rest" />
-                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                          <input class="btn btn-default" type="reset" (click)="currencyForm={};submit3=false;resetForm(form)"
+                            value="Reset" />
+                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit3=true" />
                         </div>
                       </div>
                     </form>
@@ -419,17 +455,17 @@
                 <div class="html5buttons">
                   <br>
                   <div class="dt-buttons btn-group">
-                    <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
+                    <button class="btn btn-default" [disabled]="!selection3.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteMajorCode(element.CODE)" ngbTooltip="Delete">
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','currency')" placement="bottom"
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Currency')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','currency')"
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','Currency')"
                       placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
                     </a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','currency')" placement="bottom"
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','Currency')" placement="bottom"
                       ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
@@ -441,52 +477,55 @@
                 </div>
 
                 <div class="x">
-                  <table mat-table #table2 [dataSource]="currencyDataSource" matSort>
+                  <div class="table-container">
+                    <table mat-table #table3 [dataSource]="currencyDataSource" matSort>
 
-                    <ng-container matColumnDef="select">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
-                          [indeterminate]="selection2.hasValue() && !isAllSelected2()">
-                        </mat-checkbox>
-                      </th>
-                      <td mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle3() : null" [checked]="selection3.hasValue() && isAllSelected3()"
+                            [indeterminate]="selection3.hasValue() && !isAllSelected3()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection3.toggle(row) : null"
+                            [checked]="selection3.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="CODE">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>CODE</th>
-                      <td mat-cell *matCellDef="let element"> {{element.CODE}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>CODE</th>
+                        <td mat-cell *matCellDef="let element"> {{element.CODE}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME2">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
+                      </ng-container>
 
 
 
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>Actions</th>
-                      <td mat-cell *matCellDef="let element">
-                        <i (click)="updateCurrency(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
-                        <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteCurrency(element.CODE)" ngbTooltip="Delete"></i>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <i (click)="updateCurrency(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteCurrency(element.CODE)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="currencyTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: currencyTableColumns;" (click)="updateCurrency(row)"
-                      class=" mat-row {{currencyForm.CODE===row.CODE?'active':'not-active'}}"></tr>
+                      <tr mat-header-row *matHeaderRowDef="currencyTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: currencyTableColumns;" (click)="updateCurrency(row)"
+                        class=" mat-row {{currencyForm.CODE===row.CODE?'active':'not-active'}}"></tr>
 
-                  </table>
+                    </table>
+                  </div>
                   <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
                 </div>
 

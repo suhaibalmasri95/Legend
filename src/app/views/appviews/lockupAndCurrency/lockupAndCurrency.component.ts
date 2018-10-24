@@ -1,14 +1,12 @@
 import { CoreService } from './../../../_services/CoreServices.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { environment } from '../../../../environments/environment';
-import { MajorCode } from '../../../entities/models/majorCode';
-import { MinorCode } from '../../../entities/models/minorCode';
 import { Currency } from '../../../entities/models/Currency';
 import { LockUp } from '../../../entities/models/LockUp';
+
 @Component({
   selector: 'app-lockup-and-currency',
   templateUrl: './lockupAndCurrency.component.html',
@@ -35,10 +33,10 @@ export class LockupAndCurrencyComponent implements OnInit {
   submit2: boolean;
   submit3: boolean;
 
-  majorCodeTableColumns = ['select', 'ID', 'MAJOR_CODE', 'NAME', 'NAME2', 'actions'];
+  majorCodeTableColumns = ['select', 'ID', 'MAJOR_CODE', 'NAME', 'NAME2', 'ST_LOCKUP_ID', 'actions'];
   majorCodesDataSource: MatTableDataSource<LockUp>;
 
-  minorCodeTableColumns = ['select', 'ID', 'MINOR_CODE', 'NAME', 'NAME2', 'actions'];
+  minorCodeTableColumns = ['select', 'ID', 'MAJOR_CODE', 'MINOR_CODE', 'NAME', 'NAME2', 'ST_LOCKUP_ID', 'actions'];
   minorCodesDataSource: MatTableDataSource<LockUp>;
 
   currencyTableColumns = ['select', 'CODE', 'NAME', 'NAME2', 'actions'];
@@ -57,6 +55,11 @@ export class LockupAndCurrencyComponent implements OnInit {
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
   @ViewChild('table3', { read: MatSort }) sort3: MatSort;
 
+  parentMinorCodes: LockUp[];
+  minorCodeFilter: number;
+  parentMinorCodeFilter: number;
+  filterParentMinorCodes: LockUp[];
+
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute, private coreService: CoreService) { }
 
   ngOnInit() {
@@ -70,16 +73,19 @@ export class LockupAndCurrencyComponent implements OnInit {
 
     this.majorCodeForm = new LockUp();
     this.minorCodeForm = new LockUp();
+    this.currencyForm = new Currency();
 
     this.submit = false;
     this.submit2 = false;
+    this.submit3 = false;
 
     this.route.data.subscribe(data => {
       this.LockUps = data.lockUp;
-      this.renderMajorCodeTable(data.currencies);
+      this.renderMajorCodeTable(data.majorCode);
       this.renderCurrenciesTable(data.currencies);
     });
-
+    this.parentMinorCodes = null;
+    this.filterParentMinorCodes = null;
 
   }
 
@@ -105,14 +111,19 @@ export class LockupAndCurrencyComponent implements OnInit {
       switch ($event.index) {
         case 0:
           this.extraForm = '';
-          this.majorCodesDataSource.paginator = this.majorCodesDataSource.paginator ? this.majorCodesDataSource.paginator : this.paginator;
+          this.renderMajorCodeTable(this.majorCodes);
           break;
         case 1:
           this.extraForm = 'minorCodes';
           this.reloadMinorCodeTable(this.majorCodeForm.ID ? this.majorCodeForm.ID : null);
+          if (this.majorCodeForm.ST_LOCKUP_ID)
+            this.loadParentMinorCodes(this.majorCodeForm.ST_LOCKUP_ID)
+          this.minorCodeFilter = this.majorCodeForm.ID ? this.majorCodeForm.ID : null;
+          this.minorCodeForm.MAJOR_CODE = this.majorCodeForm.ID ? this.majorCodeForm.ID : null;
           break;
         case 2:
           this.extraForm = 'currencies';
+          this.renderCurrenciesTable(this.currencies);
           break;
       }
     });
@@ -123,11 +134,12 @@ export class LockupAndCurrencyComponent implements OnInit {
     this.majorCodesDataSource = new MatTableDataSource<LockUp>(data);
     this.majorCodesDataSource.paginator = this.paginator;
     this.majorCodesDataSource.sort = this.sort;
+    this.selection = new SelectionModel<LockUp>(true, []);
     this.majorCodesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
-      return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
 
@@ -136,42 +148,47 @@ export class LockupAndCurrencyComponent implements OnInit {
     this.minorCodesDataSource = new MatTableDataSource<LockUp>(data);
     this.minorCodesDataSource.paginator = this.paginator2;
     this.minorCodesDataSource.sort = this.sort2;
+    this.selection2 = new SelectionModel<LockUp>(true, []);
+
     this.minorCodesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
-        return this.sort.direction === 'asc' ? '3' : '1';
+        return this.sort2.direction === 'asc' ? '3' : '1';
       }
-      return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
 
   renderCurrenciesTable(data) {
-    this.currencyForm = data;
+    this.currencies = data;
     this.currencyDataSource = new MatTableDataSource<Currency>(data);
     this.currencyDataSource.paginator = this.paginator3;
     this.currencyDataSource.sort = this.sort3;
+    this.selection3 = new SelectionModel<Currency>(true, []);
+
     this.currencyDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
-        return this.sort.direction === 'asc' ? '3' : '1';
+        return this.sort3.direction === 'asc' ? '3' : '1';
       }
-      return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
 
   reloadMajorCodeTable() {
-    this.coreService.loadMajorCodes().subscribe(data => {
+    this.coreService.LoadLockUpsByMinorCode(0).subscribe(data => {
       this.renderMajorCodeTable(data);
     });
   }
 
-  reloadMinorCodeTable(majorCodeId) {
-    this.coreService.loadMinorCodes(majorCodeId, null, 1).subscribe(data => {
+  reloadMinorCodeTable(majorCodeId = null) {
+    this.coreService.loadMinorCodes(majorCodeId).subscribe(data => {
       this.renderMinorCodeTable(data);
+
     });
   }
 
   reloadCurrenciesTable() {
     this.coreService.loadCurrencies().subscribe(data => {
-      this.renderMinorCodeTable(data);
+      this.renderCurrenciesTable(data);
     });
   }
 
@@ -186,16 +203,13 @@ export class LockupAndCurrencyComponent implements OnInit {
     this.majorCodeForm.CREATED_BY = 'Admin';
     this.majorCodeForm.MINOR_CODE = 0;
     this.majorCodeForm.LOCKUP_TYPE = 2;
-    if (this.majorCodeForm.ST_LOCKUP_ID > 0) {
-      this.majorCodeForm.ST_LOCKUP_ID =  this.majorCodeForm.ST_LOCKUP_ID;
-    } else {
-      this.majorCodeForm.ST_LOCKUP_ID = null;
-    }
+
     if (this.majorCodeForm.selected) {
       this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateLockUp';
     } else {
-      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateLockUp'; }
-    // tslint:disable-next-line:max-line-length
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateLockUp';
+    }
+
     this.http.post(this.AddUpdateUrl, this.majorCodeForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadMajorCodeTable();
@@ -216,18 +230,20 @@ export class LockupAndCurrencyComponent implements OnInit {
   updateMajorCode(majorCode: LockUp) {
     window.scroll(0, 0);
     this.majorCodeForm = new LockUp;
-    this.majorCodeForm.ID = majorCode.ID;
-    this.majorCodeForm.NAME = majorCode.NAME;
-    this.majorCodeForm.NAME2 = majorCode.NAME2;
-   this.majorCodeForm.REF_NO = majorCode.REF_NO;
-   this.majorCodeForm.MODIFIED_BY = majorCode.MODIFIED_BY;
-   this.majorCodeForm.MODIFICATION_DATE = majorCode.MODIFICATION_DATE;
-   this.majorCodeForm.MINOR_CODE = majorCode.MINOR_CODE;
-   this.majorCodeForm.MAJOR_CODE = majorCode.MAJOR_CODE;
-   this.majorCodeForm.LOCKUP_TYPE = majorCode.LOCKUP_TYPE;
-   this.majorCodeForm.ST_LOCKUP_ID = majorCode.ST_LOCKUP_ID;
-   this.majorCodeForm.CREATED_BY = majorCode.CREATED_BY;
-   this.majorCodeForm.CREATION_DATE = majorCode.CREATION_DATE;
+    this.majorCodeForm = majorCode;
+    // this.majorCodeForm.NAME = majorCode.NAME;
+    // this.majorCodeForm.NAME2 = majorCode.NAME2;
+    // this.majorCodeForm.REF_NO = majorCode.REF_NO;
+    // this.majorCodeForm.MODIFIED_BY = majorCode.MODIFIED_BY;
+    // this.majorCodeForm.MODIFICATION_DATE = majorCode.MODIFICATION_DATE;
+    // this.majorCodeForm.MINOR_CODE = majorCode.MINOR_CODE;
+    // this.majorCodeForm.MAJOR_CODE = majorCode.MAJOR_CODE;
+    // this.majorCodeForm.LOCKUP_TYPE = majorCode.LOCKUP_TYPE;
+    // this.majorCodeForm.ST_LOCKUP_ID = majorCode.ST_LOCKUP_ID;
+    // this.majorCodeForm.CREATED_BY = majorCode.CREATED_BY;
+    // this.majorCodeForm.CREATION_DATE = majorCode.CREATION_DATE;
+    // this.minorCodeForm.MAJOR_CODE = majorCode.ID;
+
     this.majorCodeForm.selected = true;
   }
 
@@ -235,13 +251,16 @@ export class LockupAndCurrencyComponent implements OnInit {
   // add update delete MinorCode
 
   saveMinorCode(form) {
+
     if (form.invalid) { return; }
     this.minorCodeForm = this.minorCodeForm.selected ? this.minorCodeForm : Object.assign({}, form.value);
-    // tslint:disable-next-line:max-line-length
+    this.minorCodeForm.CREATED_BY = 'Admin';
+    this.minorCodeForm.LOCKUP_TYPE = 2;
     if (this.minorCodeForm.selected) {
       this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateLockUp';
     } else {
-      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateLockUp'; }
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateLockUp';
+    }
     this.http.post(this.AddUpdateUrl, this.minorCodeForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadMinorCodeTable(this.majorCodeForm.ID ? this.majorCodeForm.ID : null);
@@ -266,15 +285,15 @@ export class LockupAndCurrencyComponent implements OnInit {
     this.minorCodeForm.ID = minorCode.ID;
     this.minorCodeForm.NAME = minorCode.NAME;
     this.minorCodeForm.NAME2 = minorCode.NAME2;
-   this.minorCodeForm.REF_NO = minorCode.REF_NO;
-   this.minorCodeForm.MODIFIED_BY = minorCode.MODIFIED_BY;
-   this.minorCodeForm.MODIFICATION_DATE = minorCode.MODIFICATION_DATE;
-   this.minorCodeForm.MINOR_CODE = minorCode.MINOR_CODE;
-   this.minorCodeForm.MAJOR_CODE = minorCode.MAJOR_CODE;
-   this.minorCodeForm.LOCKUP_TYPE = minorCode.LOCKUP_TYPE;
-   this.minorCodeForm.ST_LOCKUP_ID = minorCode.ST_LOCKUP_ID;
-   this.minorCodeForm.CREATED_BY = minorCode.CREATED_BY;
-   this.minorCodeForm.CREATION_DATE = minorCode.CREATION_DATE;
+    this.minorCodeForm.REF_NO = minorCode.REF_NO;
+    this.minorCodeForm.MODIFIED_BY = minorCode.MODIFIED_BY;
+    this.minorCodeForm.MODIFICATION_DATE = minorCode.MODIFICATION_DATE;
+    this.minorCodeForm.MINOR_CODE = minorCode.MINOR_CODE;
+    this.minorCodeForm.MAJOR_CODE = minorCode.MAJOR_CODE;
+    this.minorCodeForm.LOCKUP_TYPE = minorCode.LOCKUP_TYPE;
+    this.minorCodeForm.ST_LOCKUP_ID = minorCode.ST_LOCKUP_ID;
+    this.minorCodeForm.CREATED_BY = minorCode.CREATED_BY;
+    this.minorCodeForm.CREATION_DATE = minorCode.CREATION_DATE;
     this.minorCodeForm.selected = true;
   }
 
@@ -287,8 +306,8 @@ export class LockupAndCurrencyComponent implements OnInit {
     if (this.currencyForm.selected) {
       this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCurrency';
     } else {
-      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCurrency'; }
-    // tslint:disable-next-line:max-line-length
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCurrency';
+    }
     this.http.post(this.AddUpdateUrl, this.currencyForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCurrenciesTable();
@@ -309,18 +328,13 @@ export class LockupAndCurrencyComponent implements OnInit {
   updateCurrency(currency: Currency) {
     window.scroll(0, 0);
     this.currencyForm = new Currency;
-    // this.currencyForm.Id = currency.Id;
-    this.currencyForm.NAME = currency.NAME;
-    this.currencyForm.NAME2 = currency.NAME2;
-    // this.currencyForm.ST_CNT_ID = currency.ST_CNT_ID;
-    // this.currencyForm.Refernce_No = currency.Refernce_No;
-    // this.currencyForm.Loc_Status = currency.Loc_Status;
+    this.currencyForm = currency;
     this.currencyForm.selected = true;
   }
 
 
   loadMinorCodes() {
-    this.coreService.loadMinorCodes(this.majorCodeForm.ID ? this.majorCodeForm.ID : null, null, 1).subscribe(data => {
+    this.coreService.loadMinorCodes(this.majorCodeForm.ID ? this.majorCodeForm.ID : null).subscribe(data => {
       this.minorCodes = data;
       this.minorCodesDataSource = new MatTableDataSource<LockUp>(this.minorCodes);
     });
@@ -377,11 +391,108 @@ export class LockupAndCurrencyComponent implements OnInit {
   }
 
   isAllSelected3() {
-    return this.selection2.selected.length === this.currencyDataSource.data.length;
+    return this.selection3.selected.length === this.currencyDataSource.data.length;
   }
   masterToggle3() {
     this.isAllSelected3() ? this.selection3.clear() : this.currencyDataSource.data.forEach(row => this.selection3.select(row));
   }
 
+  resetForm(form) {
+    form.reset();
+  }
+
+
+
+  updateMajorCodeFromMinor(id) {
+    for (let index = 0; index < this.majorCodes.length; index++) {
+      if (this.majorCodes[index].ID === id) {
+        if (this.majorCodes[index].ST_LOCKUP_ID) {
+          this.loadParentMinorCodes(this.majorCodes[index].ST_LOCKUP_ID)
+        }
+        else
+          this.minorCodeForm.ST_LOCKUP_ID = null;
+        this.parentMinorCodes = null;
+        break;
+      }
+    }
+  }
+
+
+  loadParentMinorCodes(parent) {
+    this.coreService.LoadLockUpsByMajorCode(parent).subscribe(data => {
+      this.parentMinorCodes = data;
+    });
+  }
+
+
+  checkFilterMajorCodeParent(id) {
+    for (let index = 0; index < this.majorCodes.length; index++) {
+      if (this.majorCodes[index].ID === id) {
+        if (this.majorCodes[index].ST_LOCKUP_ID) {
+          this.loadFilterParentMinorCodes(this.majorCodes[index].ST_LOCKUP_ID)
+        }
+        else
+          this.minorCodeFilter = null;
+        this.filterParentMinorCodes = null;
+        break;
+      }
+    }
+  }
+
+  loadFilterParentMinorCodes(parent) {
+    this.coreService.LoadLockUpsByMajorCode(parent).subscribe(data => {
+      this.filterParentMinorCodes = data;
+    });
+  }
+
+
+  filterMinorCodeTableByParentMinorCode(parent) {
+    if (parent) {
+      this.coreService.LoadLockUpsByParentID(parent).subscribe(data => {
+        this.renderMinorCodeTable(data);
+      });
+    } else {
+      this.reloadMinorCodeTable(this.minorCodeFilter);
+      this.checkFilterMajorCodeParent(this.minorCodeFilter)
+    }
+  }
+
+
+  deleteSelectedData() {
+
+    var selectedData = [];
+    var header = new Headers({ 'Content-Type': 'application/json' });
+
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++)
+          selectedData.push(this.selection.selected[index].ID)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteLockUps', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadMajorCodeTable();
+        });
+        break;
+      case 'minorCodes':
+        for (let index = 0; index < this.selection2.selected.length; index++)
+          selectedData.push(this.selection2.selected[index].ID)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteLockUps', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadMinorCodeTable();
+        });
+        break;
+      case 'currencies':
+        for (let index = 0; index < this.selection3.selected.length; index++)
+          selectedData.push(this.selection3.selected[index].CODE)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteCurrencies', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadCurrenciesTable();
+        });
+        break;
+    }
+
+  }
 
 }

@@ -3,7 +3,6 @@ import { CoreService } from './../../_services/CoreServices.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -128,14 +127,14 @@ export class StarterViewComponent implements OnInit {
     this.countriesDataSource = new MatTableDataSource<Country>(data);
     this.countriesDataSource.paginator = this.paginator;
     this.countriesDataSource.sort = this.sort;
-
+    this.selection = new SelectionModel<Country>(true, []);
     this.countriesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       } else
-        if (typeof data[sortHeaderId] === 'string') {
-          return '2' + sortData[sortHeaderId].toLocaleLowerCase();
-        }
+
+        return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+
     };
   }
 
@@ -144,14 +143,14 @@ export class StarterViewComponent implements OnInit {
     this.citiesDataSource = new MatTableDataSource<City>(data);
     this.citiesDataSource.paginator = this.paginator2;
     this.citiesDataSource.sort = this.sort2;
-
+    this.selection2 = new SelectionModel<City>(true, []);
     this.citiesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       } else
-        if (typeof data[sortHeaderId] === 'string') {
-          return '2' + sortData[sortHeaderId].toLocaleLowerCase();
-        }
+
+        return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+
     };
   }
   renderAreaTable(data) {
@@ -159,14 +158,14 @@ export class StarterViewComponent implements OnInit {
     this.areasDataSource = new MatTableDataSource<Area>(data);
     this.areasDataSource.paginator = this.paginator3;
     this.areasDataSource.sort = this.sort3;
-
+    this.selection3 = new SelectionModel<Area>(true, []);
     this.areasDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       } else
-        if (typeof data[sortHeaderId] === 'string') {
-          return '2' + sortData[sortHeaderId].toLocaleLowerCase();
-        }
+
+        return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+
     };
   }
 
@@ -176,13 +175,13 @@ export class StarterViewComponent implements OnInit {
     });
   }
 
-  reloadCityTable(countryId) {
+  reloadCityTable(countryId = null) {
     this.coreService.loadCities(countryId, null, 1).subscribe(data => {
       this.renderCityTable(data);
     });
   }
 
-  reloadAreaTable(countryId, cityId) {
+  reloadAreaTable(countryId = null, cityId = null) {
     this.coreService.loadAreas(null, cityId, countryId, 1).subscribe(data => {
       this.renderAreaTable(data);
     });
@@ -195,13 +194,14 @@ export class StarterViewComponent implements OnInit {
       if (response) {
         this.countryForm.FLAG = response;
         if (this.countryForm.selected) {
-        this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCountry';
-      } else {
-        this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCountry'; }
+          this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCountry';
+        } else {
+          this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCountry';
+        }
 
         this.http.post(this.AddUpdateUrl, this.countryForm).subscribe(res => {
           this.uploader = new FileUploader({ url: this.coreService.CreateUrl + '/AddCountryFlag' });
-
+          this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadCountryTable();
           this.countryForm = new Country;
           this.submit = false;
@@ -228,7 +228,8 @@ export class StarterViewComponent implements OnInit {
       if (this.countryForm.selected) {
         this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCountry';
       } else {
-        this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCountry'; }
+        this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCountry';
+      }
 
       this.http.post(this.AddUpdateUrl, this.countryForm).subscribe(res => {
         this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
@@ -272,8 +273,9 @@ export class StarterViewComponent implements OnInit {
     if (this.cityForm.selected) {
       this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateCity';
     } else {
-      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCity'; }
-    this.http.post( this.AddUpdateUrl , this.cityForm).subscribe(res => {
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateCity';
+    }
+    this.http.post(this.AddUpdateUrl, this.cityForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
       this.cityForm = new City;
@@ -316,8 +318,9 @@ export class StarterViewComponent implements OnInit {
     if (this.areaForm.selected) {
       this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateArea';
     } else {
-      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateArea'; }
-    this.http.post( this.AddUpdateUrl, this.areaForm).subscribe(res => {
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateArea';
+    }
+    this.http.post(this.AddUpdateUrl, this.areaForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadAreaTable(this.cityForm.ID ? this.cityForm.ID : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
       this.areaForm = new Area;
@@ -357,7 +360,7 @@ export class StarterViewComponent implements OnInit {
 
 
   replaceFileName(fileName) {
-    return fileName ? fileName.replace('http://demo20180914093247.azurewebsites.net/Flags/', '') : '';
+    return fileName ? fileName.substring(fileName.indexOf("Flags")) : '';
   }
 
   export(type, data) {
@@ -427,6 +430,60 @@ export class StarterViewComponent implements OnInit {
   masterToggle3() {
     this.isAllSelected3() ? this.selection3.clear() : this.areasDataSource.data.forEach(row => this.selection3.select(row));
   }
+
+  resetForm(form) {
+    form.reset();
+  }
+
+
+
+
+
+
+
+
+
+
+  deleteSelectedData() {
+
+    var selectedData = [];
+    var header = new Headers({ 'Content-Type': 'application/json' });
+
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++)
+          selectedData.push(this.selection.selected[index].ID)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteCountries', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadCountryTable();
+        });
+        break;
+      case 'city':
+        for (let index = 0; index < this.selection2.selected.length; index++)
+          selectedData.push(this.selection2.selected[index].ID)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteCities', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadCityTable();
+        });
+        break;
+      case 'area':
+        for (let index = 0; index < this.selection3.selected.length; index++)
+          selectedData.push(this.selection3.selected[index].ID)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteAreas', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadAreaTable();
+        });
+        break;
+    }
+
+  }
+
+
+
+
 
 
 }

@@ -63,8 +63,8 @@
                   <br>
                   <br>
                   <div class="btn-group">
-                    <input class="btn btn-default" type="reset" (click)="bankForm={};submit=false;form.$setpristine()"
-                      value="Rest" />
+                    <input class="btn btn-default" type="reset" (click)="bankForm={};submit=false;resetForm(form)"
+                      value="Reset" />
                     <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                   </div>
                 </div>
@@ -82,9 +82,9 @@
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteBank(element.ID)" ngbTooltip="Delete">
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','bank')" placement="bottom"
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Bank')" placement="bottom"
                       ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
                     <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','bank')" placement="bottom"
@@ -99,87 +99,90 @@
                   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                 </mat-form-field>
                 <div class="x">
-                  <table mat-table #table [dataSource]="banksDataSource" matSort>
+                  <div class="table-container">
+                    <table mat-table #table [dataSource]="banksDataSource" matSort>
 
-                    <ng-container matColumnDef="select">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()">
-                        </mat-checkbox>
-                      </th>
-                      <td style="width: 5%" mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                          </mat-checkbox>
+                        </th>
+                        <td style="width: 5%" mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="ID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="CODE">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
-                      <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.CODE}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.CODE}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME2">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.NAME2}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.NAME2}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="PHONE_CODE">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Code </th>
-                      <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.PHONE_CODE}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="PHONE_CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Code </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.PHONE_CODE}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="PHONE">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone </th>
-                      <td style="width: 10%" mat-cell *matCellDef="let element">
-                        {{element.PHONE}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="PHONE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.PHONE}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>Actions</th>
-                      <td style="width: 10%" mat-cell *matCellDef="let element">
-                        <i (click)="updateBank(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
-                        <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteBank(element.ID)" ngbTooltip="Delete"></i>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          <i (click)="updateBank(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteBank(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="bankTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: bankTableColumns;" (click)="updateBank(row)" class=" mat-row {{bankForm.ID===row.ID?'active':'not-active'}}"></tr>
+                      <tr mat-header-row *matHeaderRowDef="bankTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: bankTableColumns;" (click)="updateBank(row)" class=" mat-row {{bankForm.ID===row.ID?'active':'not-active'}}"></tr>
 
-                  </table>
+                    </table>
+                  </div>
                   <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
 
                 </div>
               </div>
 
             </mat-tab>
-            <mat-tab label="Branchs">
+            <mat-tab label="Branches">
               <div class="col-md-12">
                 <div class="html5buttons">
                   <br>
                   <div class="dt-buttons btn-group">
                     <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
-                      (confirm)="deleteBank(element.ID)" ngbTooltip="Delete">
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','branch')" placement="bottom"
-                      ngbTooltip="Export to CSV"><span>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Bankbranches')"
+                      placement="bottom" ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
                     <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','branch')" placement="bottom"
                       ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
@@ -206,55 +209,58 @@
                   </mat-form-field>
                 </div>
                 <div class="x">
-                  <table mat-table #table2 [dataSource]="branchsDataSource" matSort>
+                  <div class="table-container">
+                    <table mat-table #table2 [dataSource]="branchsDataSource" matSort>
 
-                    <ng-container matColumnDef="select">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
-                          [indeterminate]="selection2.hasValue() && !isAllSelected2()">
-                        </mat-checkbox>
-                      </th>
-                      <td mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                            [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                            [checked]="selection2.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="ID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="NAME2">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="BANK">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank</th>
-                      <td mat-cell *matCellDef="let element">{{getBankName(element.ST_BNK_ID)}}
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="BANK">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank</th>
+                        <td mat-cell *matCellDef="let element">{{getBankName(element.ST_BNK_ID)}}
+                        </td>
+                      </ng-container>
 
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>Actions</th>
-                      <td mat-cell *matCellDef="let element">
-                        <i (click)="updateBranch(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
-                        <i class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                          placement="left" (confirm)="deleteBranch(element.ID)" ngbTooltip="Delete"></i>
-                      </td>
-                    </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <i (click)="updateBranch(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteBranch(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="branchTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: branchTableColumns;" (click)="updateBranch(row)" class=" mat-row {{branchForm.ID===row.ID?'active':'not-active'}}"></tr>
+                      <tr mat-header-row *matHeaderRowDef="branchTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: branchTableColumns;" (click)="updateBranch(row)" class=" mat-row {{branchForm.ID===row.ID?'active':'not-active'}}"></tr>
 
-                  </table>
+                    </table>
+                  </div>
                   <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
                 </div>
 
@@ -325,8 +331,8 @@
                         <div class="col-md-12 text-right">
                           <br>
                           <br>
-                          <input class="btn btn-default" type="reset" (click)="branchForm={};submit2=false;form.$setpristine()"
-                            value="Rest" />
+                          <input class="btn btn-default" type="reset" (click)="branchForm={};submit2=false;resetForm(form)"
+                            value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
                         </div>
                       </div>

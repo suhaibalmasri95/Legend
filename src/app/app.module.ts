@@ -18,8 +18,9 @@ import { AppviewsModule } from './views/appviews/appviews.module';
 // App modules/components
 import { LayoutsModule } from './components/common/layouts/layouts.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LockUpResolver } from './_resolvers/lockup-reolver.resolver';
 import { BankBranchResolver } from './_resolvers/BankBranch.resolver';
+import { LockUpResolver } from './_resolvers/lockup-reolver.resolver';
+import { MajorCodeResolver } from './_resolvers/majorCodes.resolver';
 
 
 
@@ -45,7 +46,8 @@ import { BankBranchResolver } from './_resolvers/BankBranch.resolver';
     AreaResolver,
     CurrencyResolver,
     BankResolver,
-    BankBranchResolver
+    BankBranchResolver,
+    MajorCodeResolver
   ],
   bootstrap: [AppComponent]
 })

@@ -10,11 +10,11 @@ import { LockUp } from '../entities/models/LockUp';
 
 
 @Injectable()
-export class LockUpResolver implements Resolve<LockUp[]> {
+export class MajorCodeResolver implements Resolve<LockUp[]> {
     constructor(private coreService: CoreService, private router: Router) { }
 
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.coreService.LoadLockUpStatus().pipe(
+        return this.coreService.LoadLockUpsByMinorCode(0).pipe(
             catchError(error => {
                 this.router.navigate(['/LockupAndCurrency']);
                 return of(null);

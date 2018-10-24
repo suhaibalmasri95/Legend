@@ -187,3 +187,10 @@ tr.mat-header-row  .mat-header-cell[aria-sort]{
 .mat-row.active{
   background: #a9d9e7; 
 }
+
+.table-container {
+  min-height: 510px;
+  border: 1px solid #e0e0e0;
+  display: inline-block;
+  width: 100%;
+}

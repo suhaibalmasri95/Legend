@@ -116,11 +116,12 @@ export class BanksComponent implements OnInit {
     this.banksDataSource = new MatTableDataSource<Bank>(data);
     this.banksDataSource.paginator = this.paginator;
     this.banksDataSource.sort = this.sort;
+    this.selection = new SelectionModel<Bank>(true, []);
     this.banksDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
-      return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
 
@@ -129,11 +130,12 @@ export class BanksComponent implements OnInit {
     this.branchsDataSource = new MatTableDataSource<BankBranches>(data);
     this.branchsDataSource.paginator = this.paginator2;
     this.branchsDataSource.sort = this.sort2;
+    this.selection2 = new SelectionModel<BankBranches>(true, []);
     this.branchsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
-        return this.sort.direction === 'asc' ? '3' : '1';
+        return this.sort2.direction === 'asc' ? '3' : '1';
       }
-      return '2' + sortData[sortHeaderId].toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
 
@@ -143,7 +145,7 @@ export class BanksComponent implements OnInit {
     });
   }
 
-  reloadBranchTable(bankId) {
+  reloadBranchTable(bankId = null) {
     this.coreService.loadBranchs(bankId, null, 1).subscribe(data => {
       this.renderBranchTable(data);
     });
@@ -166,7 +168,8 @@ export class BanksComponent implements OnInit {
     if (this.bankForm.selected) {
       this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateBank';
     } else {
-      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateBank'; }
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateBank';
+    }
     this.http.post(this.AddUpdateUrl, this.bankForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBankTable();
@@ -206,7 +209,8 @@ export class BanksComponent implements OnInit {
     if (this.branchForm.selected) {
       this.AddUpdateUrl = this.coreService.UpdateUrl + '/UpdateBankBranch';
     } else {
-      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateBankBranch'; }
+      this.AddUpdateUrl = this.coreService.CreateUrl + '/CreateBankBranch';
+    }
     this.http.post(this.AddUpdateUrl, this.branchForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBranchTable(this.bankForm.ID ? this.bankForm.ID : null);
@@ -296,5 +300,40 @@ export class BanksComponent implements OnInit {
     this.isAllSelected2() ? this.selection2.clear() : this.branchsDataSource.data.forEach(row => this.selection2.select(row));
   }
 
+  resetForm(form) {
+    form.reset();
+  }
+
+
+  deleteSelectedData() {
+
+    var selectedData = [];
+    var header = new Headers({ 'Content-Type': 'application/json' });
+
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++)
+          selectedData.push(this.selection.selected[index].ID)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteBanks', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadBankTable();
+        });
+        break;
+      case 'branchs':
+        for (let index = 0; index < this.selection2.selected.length; index++)
+          selectedData.push(this.selection2.selected[index].ID)
+
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteBankBranchs', { headers: header, body: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadBranchTable();
+        });
+        break;
+
+    }
+
+  }
 
 }
+
+
