@@ -10,6 +10,9 @@ import { Currency } from '../entities/models/Currency';
 import { LockUp } from '../entities/models/LockUp';
 import { Bank } from '../entities/models/bank';
 import { BankBranches } from '../entities/models/BankBranches';
+import { Company } from '../entities/models/Company';
+import { CompanyBranches } from '../entities/models/CompanyBranches';
+import { Department } from '../entities/models/department';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +37,9 @@ export class CoreService {
   loadCountries(): Observable<Country[]> {
     return this.http.get<Country[]>(this.QueryUrl + '/LoadCountries ');
   }
+  loadCompanies(): Observable<Company[]> {
+    return this.http.get<Company[]>(this.QueryUrl + '/LoadCompanies ');
+  }
 
   loadCities(countryId: number = null, cityId: number = null, langId: number = null): Observable<City[]> {
     let queryString = '?cityId=';
@@ -50,6 +56,38 @@ export class CoreService {
       queryString += langId;
     }
     return this.http.get<City[]>(this.QueryUrl + '/LoadCities' + queryString);
+  }
+  loadCopmanyBrancehs(ID: number = null, CompanyId: number = null, languageID: number = null): Observable<CompanyBranches[]> {
+    let queryString = '?cityId=';
+
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&countryId=';
+    if (CompanyId != null) {
+      queryString += CompanyId;
+    }
+    queryString += '&langId=';
+    if (languageID != null) {
+      queryString += languageID;
+    }
+    return this.http.get<CompanyBranches[]>(this.QueryUrl + '/LoadCompanyBranches' + queryString);
+  }
+  loadCompanyDepartments(ID: number = null, CompanyId: number = null, languageID: number = null): Observable<Department[]> {
+    let queryString = '?ID=';
+
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&CompanyId=';
+    if (CompanyId != null) {
+      queryString += CompanyId;
+    }
+    queryString += '&languageID=';
+    if (languageID != null) {
+      queryString += languageID;
+    }
+    return this.http.get<Department[]>(this.QueryUrl + '/LoadCompanyDepartments' + queryString);
   }
 
   loadAreas(areaId: number = null, cityId: number = null, countryId: number = null, langId: number = null): Observable<Area[]> {

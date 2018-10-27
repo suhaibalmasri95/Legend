@@ -13,6 +13,9 @@ import { LockupAndCurrencyComponent } from './views/appviews/lockupAndCurrency/l
 import { BankBranchResolver } from './_resolvers/BankBranch.resolver';
 import { MajorCodeResolver } from './_resolvers/majorCodes.resolver';
 import { LockUpResolver } from './_resolvers/lockup-reolver.resolver';
+import { CompanyComponent } from './views/appviews/Company/Company.component';
+import { CityResolver } from './_resolvers/city-reolver.resolver';
+import { CompanyResolver } from './_resolvers/company-reolver.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -52,6 +55,16 @@ export const ROUTES: Routes = [
           lockUp: LockUpResolver,
           majorCode: MajorCodeResolver,
           currencies: CurrencyResolver
+        }
+      }
+      ,
+      {
+        path: 'Company', component: CompanyComponent,
+        resolve: {
+          currencies: CurrencyResolver,
+          country: CountryResolver,
+          city: CityResolver,
+          company: CompanyResolver
         }
       }
     ]

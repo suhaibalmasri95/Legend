@@ -19,13 +19,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BanksComponent } from './banks/banks.component';
 import { LockupAndCurrencyComponent } from './lockupAndCurrency/lockupAndCurrency.component';
+import { CompanyComponent } from './Company/Company.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     StarterViewComponent,
     BanksComponent,
-    LockupAndCurrencyComponent
+    LockupAndCurrencyComponent,
+    CompanyComponent
   ],
   imports: [
     RouterModule,

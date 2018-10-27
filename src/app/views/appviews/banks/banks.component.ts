@@ -324,7 +324,7 @@ export class BanksComponent implements OnInit {
         for (let index = 0; index < this.selection2.selected.length; index++)
           selectedData.push(this.selection2.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteBankBranchs', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.delete(this.coreService.DeleteUrl + '/DeleteBankBranches', { headers: header, body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadBranchTable();
         });

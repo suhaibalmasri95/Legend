@@ -131,7 +131,7 @@ export class StarterViewComponent implements OnInit {
     this.countriesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
-      } else
+      }
 
         return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
@@ -147,7 +147,7 @@ export class StarterViewComponent implements OnInit {
     this.citiesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
-      } else
+      }
 
         return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
@@ -162,7 +162,7 @@ export class StarterViewComponent implements OnInit {
     this.areasDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
-      } else
+      }
 
         return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
