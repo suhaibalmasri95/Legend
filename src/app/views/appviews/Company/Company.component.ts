@@ -1,5 +1,6 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Company } from 'src/app/entities/models/Company';
+
 import { Country } from 'src/app/entities/models/country';
 import { City } from 'src/app/entities/models/City';
 import { CompanyBranches } from 'src/app/entities/models/CompanyBranches';
@@ -11,14 +12,16 @@ import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { CoreService } from 'src/app/_services/CoreServices.service';
+import { Company } from 'src/app/entities/models/Company';
 
 @Component({
   selector: 'app-company',
-  templateUrl: './Company.component.html',
-  styleUrls: ['./Company.component.css']
+  templateUrl: './company.component.html',
+  styleUrls: ['./company.component.css']
 })
 export class CompanyComponent implements OnInit {
 
+  c
   companyForm: Company;
   countries: Country[];
   companies: Company[];
