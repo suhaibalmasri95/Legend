@@ -16,7 +16,7 @@ export class MinorCodeResolver implements Resolve<LockUp[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
         return this.coreService.LoadLockUpsByMajorCode().pipe(
             catchError(error => {
-                this.router.navigate(['/LockupAndCurrency']);
+                this.router.navigate(['']);
                 return of(null);
             })
         );

@@ -16,7 +16,7 @@ export class CityResolver implements Resolve<City[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<City[]> {
         return this.coreService.loadCities().pipe(
             catchError(error => {
-                this.router.navigate(['/LockupAndCurrency']);
+                this.router.navigate(['']);
                 return of(null);
             })
         );

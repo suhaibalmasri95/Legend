@@ -1,7 +1,7 @@
 <div class="row wrapper border-bottom white-bg page-heading">
   <div class="col-sm-10">
     <!-- <h2>{{formControls.Name}}</h2> -->
-    <h2>Banks</h2>
+    <h2>Organizations</h2>
     <ol class="breadcrumb">
       <li>
         <a href="index.html">Home</a>
@@ -10,7 +10,7 @@
         <a>Organizations</a>
       </li>
       <li class="active">
-        <strong>Banks</strong>
+        <strong>Reports Groups & Reports</strong>
       </li>
     </ol>
   </div>
@@ -31,39 +31,31 @@
 
           <fieldset>
             <legend>
-              Banks
+              Reports Groups
             </legend>
-            <form #form="ngForm" (ngSubmit)="saveBank(form)" class="{{submit?'submited':''}}">
-              <div class="row">
-                <div class="form-group col-md-3">
-                  <label for="CODE">Code</label>
-                  <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="bankForm.CODE">
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="NAME">Name <span class="help-block">*</span></label>
-                  <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="bankForm.NAME"
-                    required>
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="NAME2">Name 2</label>
-                  <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="bankForm.NAME2">
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="PHONE_CODE">Phone Code</label>
-                  <input name="PHONE_CODE" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="bankForm.PHONE_CODE">
-                </div>
-              </div>
+            <form #form="ngForm" (ngSubmit)="saveReportsGroup(form)" class="{{submit?'submited':''}}">
 
               <div class="row">
                 <div class="form-group col-md-3">
-                  <label for="PHONE">Phone</label>
-                  <input name="PHONE" placeholder="Phone" type="text" class="form-control" [(ngModel)]="bankForm.PHONE">
+                  <label for="NAME">Name <span class="help-block">*</span></label>
+                  <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="reportsGroupForm.NAME"
+                    required>
+                  <!-- <span class="help-block" *ngIf="form.controls.Name&&form.controls.Name.invalid &&( form.controls.Name.touched|| form.controls.Name.dirty||form.submitted)">required</span> -->
                 </div>
-                <div class="col-md-7 text-right">
+                <div class="form-group col-md-3">
+                  <label for="NAME2">Name 2</label>
+                  <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="reportsGroupForm.NAME2">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="PHONE_CODE">Order By</label>
+                  <input name="PHONE_CODE" placeholder="Order By" type="number" class="form-control" [(ngModel)]="reportsGroupForm.PHONE_CODE">
+                </div>
+
+                <div class="col-md-3 text-right">
                   <br>
                   <br>
                   <div class="btn-group">
-                    <input class="btn btn-default" type="reset" (click)="bankForm={};submit=false;resetForm(form)"
+                    <input class="btn btn-default" type="reset" (click)="reportsGroupForm={};submit=false;resetForm(form)"
                       value="Reset" />
                     <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                   </div>
@@ -74,8 +66,9 @@
 
           <br>
 
-          <mat-tab-group (selectedTabChange)="changeTab($event)">
-            <mat-tab label="Banks">
+          <mat-tab-group (selectedTabChange)="showReportAreaForm($event)">
+            <mat-tab label="Reports Groups">
+
               <div class="col-md-12">
                 <div class="html5buttons">
                   <br>
@@ -84,13 +77,13 @@
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
                       (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Bank')" placement="bottom"
-                      ngbTooltip="Export to CSV"><span>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','reportsGroup')"
+                      placement="bottom" ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','bank')" placement="bottom"
-                      ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','bank')" placement="bottom"
-                      ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','reportsGroup')"
+                      placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','reportsGroup')"
+                      placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
                 </div>
@@ -100,7 +93,7 @@
                 </mat-form-field>
                 <div class="x">
                   <div class="table-container">
-                    <table mat-table #table [dataSource]="banksDataSource" matSort>
+                    <table mat-table #table [dataSource]="reportsGroupsDataSource" matSort>
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
@@ -117,19 +110,15 @@
 
                       <ng-container matColumnDef="ID">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                        <td style="width: 5%" mat-cell *matCellDef="let element">
+                          {{element.ID}}
                         </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="CODE">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
-                        <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.CODE}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME}}
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.NAME}}
                         </td>
                       </ng-container>
 
@@ -139,30 +128,28 @@
                           {{element.NAME2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="PHONE_CODE">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Code </th>
+
+
+                      <ng-container matColumnDef="orderBy">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order By</th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.PHONE_CODE}} </td>
+                          {{element.orderBy}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="PHONE">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone </th>
-                        <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.PHONE}} </td>
-                      </ng-container>
 
                       <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td style="width: 10%" mat-cell *matCellDef="let element">
-                          <i (click)="updateBank(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                        <td style="width: 20%" mat-cell *matCellDef="let element">
+                          <i (click)="updateReportsGroup(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                           <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
                             [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                            (confirm)="deleteBank(element.ID)" ngbTooltip="Delete"></i>
+                            (confirm)="deleteReportsGroup(element.ID)" ngbTooltip="Delete"></i>
                         </td>
                       </ng-container>
 
-                      <tr mat-header-row *matHeaderRowDef="bankTableColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: bankTableColumns;" (click)="updateBank(row)" class=" mat-row {{bankForm.ID===row.ID?'active':'not-active'}}"></tr>
+                      <tr mat-header-row *matHeaderRowDef="reportsGroupTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: reportsGroupTableColumns;" (click)="updateReportsGroup(row)"
+                        class=" mat-row {{reportsGroupForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
                   </div>
@@ -172,7 +159,7 @@
               </div>
 
             </mat-tab>
-            <mat-tab label="Branches">
+            <mat-tab label="Reports">
               <div class="col-md-12">
                 <div class="html5buttons">
                   <br>
@@ -181,13 +168,14 @@
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
                       (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Bankbranches')"
-                      placement="bottom" ngbTooltip="Export to CSV"><span>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','report')" placement="bottom"
+                      ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','branch')" placement="bottom"
-                      ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
-                    </a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','branch')" placement="bottom"
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','report')" placement="bottom"
+                      ngbTooltip="Export to Excel"><span><img src="
+                                            assets/images/ExcelLogoSmall.scale-80.png">
+                      </span> </a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','report')" placement="bottom"
                       ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
@@ -199,18 +187,18 @@
                 </div>
                 <div class="col-md-3">
                   <mat-form-field>
-                    <mat-select placeholder="Bank" (selectionChange)="reloadBranchTable(branchForm.ST_CNT_ID)"
-                      [(ngModel)]="branchForm.ST_CNT_ID">
+                    <mat-select placeholder="Reports Group" (selectionChange)="reloadReportTable(reportForm.ST_CNT_ID)"
+                      [(ngModel)]="reportForm.ST_CNT_ID">
                       <mat-option [value]=""> All </mat-option>
-                      <mat-option *ngFor="let bank of banks" [value]="bank.ID">
-                        {{bank.NAME}}
+                      <mat-option *ngFor="let reportsGroup of reportsGroups" [value]="reportsGroup.ID">
+                        {{reportsGroup.NAME}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="x">
                   <div class="table-container">
-                    <table mat-table #table2 [dataSource]="branchsDataSource" matSort>
+                    <table mat-table #table2 [dataSource]="reportsDataSource" matSort>
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
@@ -230,6 +218,11 @@
                         <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                       </ng-container>
 
+                      <ng-container matColumnDef="Code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Code}} </td>
+                      </ng-container>
+
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.NAME}} </td>
@@ -240,24 +233,30 @@
                         <td mat-cell *matCellDef="let element"> {{element.NAME2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="BANK">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank</th>
-                        <td mat-cell *matCellDef="let element">{{getBankName(element.ST_BNK_ID)}}
+                      <ng-container matColumnDef="order">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
+                        <td mat-cell *matCellDef="let element">{{element.order}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="reportOrder">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Report Order</th>
+                        <td mat-cell *matCellDef="let element">{{element.reportOrder}}
                         </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
-                          <i (click)="updateBranch(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="updateReport(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                           <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
                             [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                            (confirm)="deleteBranch(element.ID)" ngbTooltip="Delete"></i>
+                            (confirm)="deleteReport(element.ID)" ngbTooltip="Delete"></i>
                         </td>
                       </ng-container>
 
-                      <tr mat-header-row *matHeaderRowDef="branchTableColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: branchTableColumns;" (click)="updateBranch(row)" class=" mat-row {{branchForm.ID===row.ID?'active':'not-active'}}"></tr>
+                      <tr mat-header-row *matHeaderRowDef="reportTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: reportTableColumns;" (click)="updateReport(row)" class=" mat-row {{reportForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
                   </div>
@@ -267,71 +266,51 @@
                 <div class="hr-line-dashed"></div>
 
 
-                <div class="col-md-12 extra-form" *ngIf="extraForm==='branchs'">
+                <div class="col-md-12 extra-form" *ngIf="extraForm==='report'">
 
                   <fieldset class="animated fadeInDown">
                     <legend>
-                      Branch
+                      Report
                     </legend>
-                    <form #form="ngForm" (ngSubmit)="saveBranch(form)" class="{{submit2?'submited':''}}">
+                    <form #form="ngForm" (ngSubmit)="saveReport(form)" class="{{submit2?'submited':''}}">
                       <div class="row">
+
                         <div class="form-group col-md-3">
-                          <label for="CODE">Code</label>
-                          <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="branchForm.CODE">
-                        </div>
-                        <div class="form-group col-md-3">
-                          <label for="NAME">Name <span class="help-block">*</span></label>
-                          <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="branchForm.NAME"
+                          <label for="Code">Code <span class="help-block">*</span></label>
+                          <input name="Code" placeholder="Code" type="text" class="form-control" [(ngModel)]="reportForm.Code"
                             required>
                         </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="NAME">Name <span class="help-block">*</span></label>
+                          <input name="NAME" placeholder="Name" type="text" class="form-control" [(ngModel)]="reportForm.NAME"
+                            required>
+                        </div>
+
                         <div class="form-group col-md-3">
                           <label for="NAME2">Name 2</label>
-                          <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="branchForm.NAME2">
+                          <input name="NAME2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="reportForm.NAME2">
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="ST_BNK_ID">Bank <span class="help-block">*</span></label>
-                          <select name="ST_BNK_ID" class="form-control" [(ngModel)]="branchForm.ST_BNK_ID" required>
-                            <option [ngValue]="">Select</option>
-                            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{bank.NAME}}</option>
-                          </select>
+                          <label for="ReportOrder">Report Order </label>
+                          <input name="ReportOrder" placeholder="Report Order" type="number" class="form-control"
+                            [(ngModel)]="reportsGroupForm.ReportOrder">
                         </div>
-
                       </div>
 
                       <div class="row">
-
                         <div class="form-group col-md-3">
-                          <label for="ST_CNT_ID">Country <span class="help-block">*</span></label>
-                          <select name="ST_CNT_ID" placeholder="Country" class="form-control" [(ngModel)]="branchForm.ST_CNT_ID"
-                            (change)="loadCities()" required>
-                            <option ngValue="">Select</option>
-                            <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.NAME}}</option>
+                          <label for="ST_CNT_ID">Reports Group <span class="help-block">*</span></label>
+                          <select name="ST_CNT_ID" class="form-control" [(ngModel)]="reportForm.ST_CNT_ID" required>
+                            <option [ngValue]="">Select</option>
+                            <option *ngFor="let reportsGroup of reportsGroups" [ngValue]="reportsGroup.ID">{{reportsGroup.NAME}}</option>
                           </select>
                         </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="ST_CITY_ID">City <span class="help-block">*</span></label>
-                          <select name="ST_CITY_ID" placeholder="City" class="form-control" [(ngModel)]="branchForm.ST_CITY_ID"
-                            [disabled]="!cities ||cities.length===0" required>
-                            <option ngValue="">Select</option>
-                            <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.NAME}}</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="PHONE_CODE">Phone Code</label>
-                          <input name="PHONE_CODE" placeholder="Phone Code" type="text" class="form-control"
-                            [(ngModel)]="branchForm.PHONE_CODE">
-                        </div>
-                        <div class="form-group col-md-3">
-                          <label for="PHONE">Phone</label>
-                          <input name="PHONE" placeholder="Phone" type="text" class="form-control" [(ngModel)]="branchForm.PHONE">
-                        </div>
-                        <div class="col-md-12 text-right">
+                        <div class="col-md-8 text-right">
                           <br>
                           <br>
-                          <input class="btn btn-default" type="reset" (click)="branchForm={};submit2=false;resetForm(form)"
+                          <input class="btn btn-default" type="reset" (click)="reportForm={};submit2=false;resetForm(form)"
                             value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
                         </div>

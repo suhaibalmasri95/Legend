@@ -16,7 +16,7 @@ export class CountryResolver implements Resolve<Country[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<Country[]> {
         return this.coreService.loadCountries().pipe(
             catchError(error => {
-                this.router.navigate(['/LockupAndCurrency']);
+                this.router.navigate(['']);
                 return of(null);
             })
         );

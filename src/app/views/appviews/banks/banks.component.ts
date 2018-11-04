@@ -1,11 +1,10 @@
 
 import { CoreService } from './../../../_services/CoreServices.service';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { environment } from '../../../../environments/environment';
 import { Bank } from '../../../entities/models/bank';
 import { BankBranches } from '../../../entities/models/BankBranches';
 import { LockUp } from '../../../entities/models/LockUp';
@@ -181,7 +180,7 @@ export class BanksComponent implements OnInit {
   }
 
   deleteBank(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteBank?bankID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteBank?bankID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBankTable();
     });
@@ -222,7 +221,7 @@ export class BanksComponent implements OnInit {
   }
 
   deleteBranch(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteBankBranch?bankBranchesID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteBankBranch?bankBranchesID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBranchTable(this.bankForm.ID ? this.bankForm.ID : null);
     });
@@ -308,14 +307,14 @@ export class BanksComponent implements OnInit {
   deleteSelectedData() {
 
     var selectedData = [];
-    var header = new Headers({ 'Content-Type': 'application/json' });
+   
 
     switch (this.extraForm) {
       case '':
         for (let index = 0; index < this.selection.selected.length; index++)
           selectedData.push(this.selection.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteBanks', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteBanks', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadBankTable();
         });
@@ -324,7 +323,7 @@ export class BanksComponent implements OnInit {
         for (let index = 0; index < this.selection2.selected.length; index++)
           selectedData.push(this.selection2.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteBankBranches', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteBankBranches', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadBranchTable();
         });

@@ -6,15 +6,15 @@ import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BankBranches } from '../entities/models/BankBranches';
+import { LockUp } from '../entities/models/LockUp';
 
 
 @Injectable()
-export class BankBranchResolver implements Resolve<BankBranches[]> {
+export class UserTypesResolver implements Resolve<LockUp[]> {
     constructor(private coreService: CoreService, private router: Router) { }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<BankBranches[]> {
-        return this.coreService.loadBranchs().pipe(
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.coreService.LoadLockUpStatus(2).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);

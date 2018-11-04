@@ -1,23 +1,23 @@
 
-import { CoreService } from './../../_services/CoreServices.service';
+import { CoreService } from '../../../_services/CoreServices.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Country } from '../../entities/models/country';
-import { City } from '../../entities/models/City';
-import { LockUp } from '../../entities/models/LockUp';
-import { Currency } from '../../entities/models/Currency';
-import { Area } from '../../entities/models/Area';
+import { Country } from '../../../entities/models/country';
+import { City } from '../../../entities/models/City';
+import { LockUp } from '../../../entities/models/LockUp';
+import { Currency } from '../../../entities/models/Currency';
+import { Area } from '../../../entities/models/Area';
 
 @Component({
-  selector: 'app-starter',
-  templateUrl: 'starter.template.html'
+  selector: 'app-countries',
+  templateUrl: 'countries.component.html'
 })
 
-export class StarterViewComponent implements OnInit {
+export class CountriesComponent implements OnInit {
   countryForm: Country;
   countries: Country[];
   cityForm: City;
@@ -133,7 +133,7 @@ export class StarterViewComponent implements OnInit {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
 
-        return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
   }
@@ -149,7 +149,7 @@ export class StarterViewComponent implements OnInit {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
 
-        return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
   }
@@ -164,7 +164,7 @@ export class StarterViewComponent implements OnInit {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
 
-        return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
   }
@@ -242,7 +242,7 @@ export class StarterViewComponent implements OnInit {
   }
 
   deleteCountry(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteCountry?countryID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCountry?countryID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCountryTable();
     });
@@ -286,7 +286,7 @@ export class StarterViewComponent implements OnInit {
   }
 
   deleteCity(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteCity?cityID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCity?cityID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
     });
@@ -330,7 +330,7 @@ export class StarterViewComponent implements OnInit {
   }
 
   deleteArea(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteArea?areaID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteArea?areaID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadAreaTable(this.cityForm.ID ? this.cityForm.ID : null, this.cityForm.ST_CNT_ID ? this.cityForm.ST_CNT_ID : null);
     });
@@ -447,23 +447,25 @@ export class StarterViewComponent implements OnInit {
   deleteSelectedData() {
 
     var selectedData = [];
-    var header = new Headers({ 'Content-Type': 'application/json' });
+   
 
     switch (this.extraForm) {
       case '':
         for (let index = 0; index < this.selection.selected.length; index++)
           selectedData.push(this.selection.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteCountries', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCountries', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadCountryTable();
         });
+
+
         break;
       case 'city':
         for (let index = 0; index < this.selection2.selected.length; index++)
           selectedData.push(this.selection2.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteCities', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCities', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadCityTable();
         });
@@ -472,7 +474,7 @@ export class StarterViewComponent implements OnInit {
         for (let index = 0; index < this.selection3.selected.length; index++)
           selectedData.push(this.selection3.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteAreas', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteAreas', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadAreaTable();
         });

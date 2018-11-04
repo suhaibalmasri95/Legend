@@ -12,7 +12,6 @@ import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 
 // App views
-import { DashboardsModule } from './views/dashboards/dashboards.module';
 import { AppviewsModule } from './views/appviews/appviews.module';
 
 // App modules/components
@@ -21,6 +20,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BankBranchResolver } from './_resolvers/BankBranch.resolver';
 import { LockUpResolver } from './_resolvers/lockup-reolver.resolver';
 import { MajorCodeResolver } from './_resolvers/majorCodes.resolver';
+import { CompanyResolver } from './_resolvers/company-reolver.resolver';
+import { CompanyBranchResolver } from './_resolvers/companyBranch-reolver.resolver';
+import { UserTypesResolver } from './_resolvers/userTypes-reolver.resolver';
+import { UsersResolver, GroubsResolver } from './_resolvers/users.resolver';
 
 
 
@@ -31,14 +34,12 @@ import { MajorCodeResolver } from './_resolvers/majorCodes.resolver';
   imports: [
     BrowserModule,
     HttpModule,
-    DashboardsModule,
     LayoutsModule,
     AppviewsModule,
     RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
-
   ],
-  // tslint:disable-next-line:max-line-length
+
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
     LockUpResolver,
     CityResolver,
@@ -47,7 +48,12 @@ import { MajorCodeResolver } from './_resolvers/majorCodes.resolver';
     CurrencyResolver,
     BankResolver,
     BankBranchResolver,
-    MajorCodeResolver
+    MajorCodeResolver,
+    CompanyResolver,
+    CompanyBranchResolver,
+    UserTypesResolver,
+    UsersResolver,
+    GroubsResolver
   ],
   bootstrap: [AppComponent]
 })

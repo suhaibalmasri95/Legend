@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { StarterViewComponent } from './starterview.component';
+import { CountriesComponent } from './countries/countries.component';
 import { LoginComponent } from './login.component';
 import { SparklineModule } from '../../components/charts/sparkline';
 import { PeityModule } from '../../components/charts/peity';
@@ -19,15 +19,24 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BanksComponent } from './banks/banks.component';
 import { LockupAndCurrencyComponent } from './lockupAndCurrency/lockupAndCurrency.component';
-import { CompanyComponent } from './Company/Company.component';
+import { CompanybranchComponent } from './companybranch/companybranch.component';
+import { UsersComponent } from './users/users.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { ReportsComponent } from './reports/reports.component';
+import { MenuDetails } from './menuDetails/menuDetails.component';
+import { GroupsComponent } from './groups/groups.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    StarterViewComponent,
+    CountriesComponent,
     BanksComponent,
     LockupAndCurrencyComponent,
-    CompanyComponent
+    CompanybranchComponent,
+    UsersComponent,
+    ReportsComponent,
+    MenuDetails,
+    GroupsComponent
   ],
   imports: [
     RouterModule,
@@ -52,10 +61,12 @@ import { CompanyComponent } from './Company/Company.component';
       confirmButtonType: 'danger' // set defaults here
     }),
     MatDividerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    NgMultiSelectDropDownModule.forRoot()
+
   ],
   exports: [
-    StarterViewComponent,
+    CountriesComponent,
     LoginComponent
   ],
 })

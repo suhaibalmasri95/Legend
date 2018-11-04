@@ -16,7 +16,7 @@ export class CompanyResolver implements Resolve<Company[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<Company[]> {
         return this.coreService.loadCompanies().pipe(
             catchError(error => {
-                this.router.navigate(['/LockupAndCurrency']);
+                this.router.navigate(['']);
                 return of(null);
             })
         );

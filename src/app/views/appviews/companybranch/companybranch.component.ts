@@ -1,27 +1,27 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { Country } from 'src/app/entities/models/country';
-import { City } from 'src/app/entities/models/City';
-import { CompanyBranches } from 'src/app/entities/models/CompanyBranches';
-import { Currency } from 'src/app/entities/models/Currency';
+import { Country } from '../../../entities/models/country';
+import { City } from '../../../entities/models/City';
+import { CompanyBranches } from '../../../entities/models/CompanyBranches';
+import { Currency } from '../../../entities/models/Currency';
 import { MatTableDataSource, MatSnackBarHorizontalPosition, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
-import { Department } from 'src/app/entities/models/department';
+import { Department } from '../../../entities/models/department';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FileUploader } from 'ng2-file-upload';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { CoreService } from 'src/app/_services/CoreServices.service';
-import { Company } from 'src/app/entities/models/Company';
+import { CoreService } from './../../../_services/CoreServices.service';
+import { Company } from '../../../entities/models/Company';
 
 @Component({
-  selector: 'app-company',
-  templateUrl: './company.component.html',
-  styleUrls: ['./company.component.css']
+  selector: 'app-companybranch',
+  templateUrl: './companybranch.component.html',
+  styleUrls: ['./companybranch.component.css']
 })
-export class CompanyComponent implements OnInit {
+export class CompanybranchComponent implements OnInit {
 
-  c
+
   companyForm: Company;
   countries: Country[];
   companies: Company[];
@@ -39,7 +39,7 @@ export class CompanyComponent implements OnInit {
   companyBranchTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ST_COM_ID' , 'ST_CNT_ID' , 'ST_CTY_ID', 'CODE' , 'PHONE' ,   'actions'];
   companyBranchesDataSource: MatTableDataSource<CompanyBranches>;
   departments: Department[];
-  departmentTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ST_BRN_ID', 'EMAIL', 'actions'];
+  departmentTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ST_COM_ID', 'EMAIL', 'actions'];
   departmentDataSource: MatTableDataSource<Department>;
   AddUpdateUrl: string;
   selection: SelectionModel<Company>;
@@ -81,8 +81,9 @@ export class CompanyComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.countries = data.country;
       this.companies = data.company;
-      this.cities = data.city;
       this.currencies = data.currencies;
+      this.cities = data.city;
+      this.companyBranches = data.branches;
       this.renderCompanyTable(data.company);
     });
 
@@ -95,15 +96,19 @@ export class CompanyComponent implements OnInit {
       case '':
         this.companiesDataSource.filter = filterValue.trim().toLowerCase();
         break;
-      case 'city':
+      case 'CompanyBranch':
         this.companyBranchesDataSource.filter = filterValue.trim().toLowerCase();
         break;
-      case 'area':
+      case 'department':
         this.departmentDataSource.filter = filterValue.trim().toLowerCase();
         break;
     }
   }
-
+  loadCities($event) {
+    this.coreService.loadCities($event, null, 1).subscribe(data => {
+      this.cities = data;
+    });
+  }
 
   showBranchAndDepartmentForm($event) {
     setTimeout(() => {
@@ -113,12 +118,12 @@ export class CompanyComponent implements OnInit {
           this.companiesDataSource.paginator = this.companiesDataSource.paginator ? this.companiesDataSource.paginator : this.paginator;
           break;
         case 1:
-          this.extraForm = 'city';
+          this.extraForm = 'CompanyBranch';
           this.reloadCompanyBranchTable(this.companyForm.ID ? this.companyForm.ID : null);
           this.companyBranchForm.ST_COM_ID = this.companyForm.ID;
           break;
         case 2:
-          this.extraForm = 'area';
+          this.extraForm = 'department';
           this.reloadDepartmentTable(this.companyBranchForm.ST_COM_ID ? this.companyBranchForm.ST_COM_ID : null);
           this.departmentFrom.ST_BRN_ID = this.companyBranchForm.ID;
           this.departmentFrom.ST_COM_ID = this.companyBranchForm.ST_COM_ID;
@@ -246,7 +251,7 @@ export class CompanyComponent implements OnInit {
   }
 
   deleteCompany(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteCompany?CompanyID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCompany?CompanyID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCompanyTable();
     });
@@ -258,6 +263,7 @@ export class CompanyComponent implements OnInit {
     this.companyForm.ID = company.ID;
     this.companyForm.NAME = company.NAME;
     this.companyForm.NAME2 = company.NAME2;
+    this.companyForm.PHONE = company.PHONE;
     this.companyForm.COUNTRY_CODE = company.COUNTRY_CODE;
     this.companyForm.MOBILE = company.MOBILE;
     this.companyForm.FAX = company.FAX;
@@ -302,7 +308,7 @@ export class CompanyComponent implements OnInit {
   }
 
   deleteCompanyBranch(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteCompanyBranch?BranchID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCompanyBranch?BranchID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCompanyBranchTable(this.companyBranchForm.ID ? this.companyBranchForm.ID : null);
     });
@@ -351,7 +357,7 @@ export class CompanyComponent implements OnInit {
   }
 
   deleteDepartment(id) {
-    this.http.delete(this.coreService.DeleteUrl + '/DeleteCompanyDepartment?DepartmentID=' + id).subscribe(res => {
+    this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCompanyDepartment?DepartmentID=' + id).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadDepartmentTable( this.companyBranchForm.ST_COM_ID ? this.companyBranchForm.ST_COM_ID : null);
     });
@@ -373,7 +379,7 @@ export class CompanyComponent implements OnInit {
 
 
 
-  loadCompanyBranches() {
+  loadCompanyBranches($event) {
     this.coreService.loadCopmanyBrancehs(this.companyForm.ID ? this.companyForm.ID : null, null, 1).subscribe(data => {
       this.companyBranches = data;
       this.companyBranchesDataSource = new MatTableDataSource<CompanyBranches>(this.companyBranches);
@@ -430,7 +436,7 @@ export class CompanyComponent implements OnInit {
 
   getBranchName(id: number) {
     for (let index = 0; index < this.companyBranches.length; index++) {
-      if (this.companyBranches[index].ID === id) {
+      if (this.companyBranches[index].ST_COM_ID === id) {
         return this.companyBranches[index].NAME;
       }
     }
@@ -474,14 +480,13 @@ export class CompanyComponent implements OnInit {
   deleteSelectedData() {
 
     var selectedData = [];
-    var header = new Headers({ 'Content-Type': 'application/json' });
-
+   
     switch (this.extraForm) {
       case '':
         for (let index = 0; index < this.selection.selected.length; index++)
           selectedData.push(this.selection.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteCompanies', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCompanies', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadCompanyTable();
         });
@@ -490,7 +495,7 @@ export class CompanyComponent implements OnInit {
         for (let index = 0; index < this.selection2.selected.length; index++)
           selectedData.push(this.selection2.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteCompanyBranches', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCompanyBranches', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadCompanyBranchTable();
         });
@@ -499,7 +504,7 @@ export class CompanyComponent implements OnInit {
         for (let index = 0; index < this.selection3.selected.length; index++)
           selectedData.push(this.selection3.selected[index].ID)
 
-        this.http.delete(this.coreService.DeleteUrl + '/DeleteCompanyDepartments', { headers: header, body: selectedData }).subscribe(res => {
+        this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCompanyDepartments', { body: selectedData }).subscribe(res => {
           this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadDepartmentTable();
         });

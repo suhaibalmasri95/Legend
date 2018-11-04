@@ -16,7 +16,7 @@ export class BankResolver implements Resolve<Bank[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<Bank[]> {
         return this.coreService.loadBanks().pipe(
             catchError(error => {
-                this.router.navigate(['/LockupAndCurrency']);
+                this.router.navigate(['']);
                 return of(null);
             })
         );

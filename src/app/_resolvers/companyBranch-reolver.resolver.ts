@@ -6,15 +6,15 @@ import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BankBranches } from '../entities/models/BankBranches';
+import { CompanyBranches } from '../entities/models/CompanyBranches';
 
 
 @Injectable()
-export class BankBranchResolver implements Resolve<BankBranches[]> {
+export class CompanyBranchResolver implements Resolve<CompanyBranches[]> {
     constructor(private coreService: CoreService, private router: Router) { }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<BankBranches[]> {
-        return this.coreService.loadBranchs().pipe(
+    resolve(route: ActivatedRouteSnapshot): Observable<CompanyBranches[]> {
+        return this.coreService.loadCopmanyBrancehs().pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
